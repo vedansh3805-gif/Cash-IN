@@ -1,0 +1,216 @@
+/* CashFlow JavaFX Theme: Ocean Glass */
+.root {
+    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -color-bg-base: #031b26;
+    -color-bg-surface: #072a3b;
+    -color-bg-card: #0b3d54;
+    -color-border: #156285;
+    -color-text-primary: #e0f2fe;
+    -color-text-secondary: #bae6fd;
+    -color-accent: #06b6d4;
+    -color-accent-hover: #0891b2;
+    -color-success: #10b981;
+    -color-warning: #f59e0b;
+    -color-danger: #ef4444;
+    -fx-background-color: -color-bg-base;
+}
+
+.label {
+    -fx-text-fill: -color-text-primary;
+}
+
+.sidebar {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: transparent -color-border transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 20 12 20 12;
+}
+
+.brand-title {
+    -fx-text-fill: -color-text-primary;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.brand-subtitle {
+    -fx-text-fill: -color-accent;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.nav-section-title {
+    -fx-text-fill: -color-text-secondary;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 14 8 6 8;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-text-secondary;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-padding: 9 14;
+    -fx-background-radius: 6;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: -color-border;
+    -fx-text-fill: -color-text-primary;
+}
+
+.nav-button.active {
+    -fx-background-color: -color-accent;
+    -fx-text-fill: #031b26;
+    -fx-font-weight: bold;
+}
+
+.kpi-card {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+}
+
+.kpi-title {
+    -fx-text-fill: -color-text-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.kpi-value {
+    -fx-text-fill: -color-text-primary;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 4 0;
+}
+
+.text-field, .combo-box {
+    -fx-background-color: -color-bg-card;
+    -fx-text-fill: -color-text-primary;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+}
+
+.combo-box .cell, .combo-box .list-cell {
+    -fx-text-fill: -color-text-primary;
+    -fx-background-color: -color-bg-card;
+}
+
+.button-primary {
+    -fx-background-color: -color-accent;
+    -fx-text-fill: #031b26;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.button-secondary {
+    -fx-background-color: -color-bg-card;
+    -fx-text-fill: -color-text-primary;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.table-view {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #104863;
+    -fx-background-insets: 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #104863;
+    -fx-border-color: transparent -color-border -color-border transparent;
+    -fx-border-width: 0 1 1 0;
+    -fx-padding: 10 8;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #ffffff !important;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.table-row-cell {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -color-bg-base;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #156285;
+}
+
+.table-row-cell .text {
+    -fx-fill: -color-text-primary;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+/* Chart Axis & Legend */
+.chart-title {
+    -fx-text-fill: -color-text-primary;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.axis {
+    -fx-tick-label-fill: -color-text-primary !important;
+    -fx-tick-length: 5;
+    -fx-minor-tick-visible: false;
+}
+
+.axis-label {
+    -fx-text-fill: -color-text-primary !important;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color: -color-bg-card;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.chart-legend-item {
+    -fx-text-fill: -color-text-primary !important;
+}
+
+/* Pie Chart Palette - Ocean Theme: Cyan, Sky Blue, Seafoam, Teal, Indigo */
+.default-color0.chart-pie { -fx-pie-color: #06b6d4; } /* Cyan */
+.default-color1.chart-pie { -fx-pie-color: #38bdf8; } /* Sky Blue */
+.default-color2.chart-pie { -fx-pie-color: #14b8a6; } /* Seafoam Teal */
+.default-color3.chart-pie { -fx-pie-color: #6366f1; } /* Indigo */
+.default-color4.chart-pie { -fx-pie-color: #22d3ee; } /* Aqua */
+
+.chart-pie-label {
+    -fx-fill: -color-text-primary;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+.chart-pie-label-line {
+    -fx-stroke: -color-text-secondary;
+}
