@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFlow &mdash; Small Business Liquidity & Early Warning SaaS</title>
+    <link rel="stylesheet" href="css/themes.css?v=2.2">
+    <link rel="stylesheet" href="css/layout.css?v=2.2">
+    <link rel="stylesheet" href="css/components.css?v=2.2">
+    <link rel="stylesheet" href="css/pages.css?v=2.2">
+</head>
+<body class="theme-arctic-ledger">
+
+    <!-- Component 3: Authentication & Login Page Overlay -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">&#8377;</div>
+                <h2 class="auth-title">Welcome to CashFlow</h2>
+                <p class="auth-subtitle">Small Business Liquidity Management &amp; Early Warning System</p>
+            </div>
+
+            <form id="login-form" class="auth-form" onsubmit="event.preventDefault(); Auth.handleLogin(); return false;">
+                <div class="auth-field">
+                    <label for="login-username">Corporate Email / Username</label>
+                    <div class="auth-input-group">
+                        <span class="auth-input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </span>
+                        <input type="text" id="login-username" class="auth-input" placeholder="admin@cashflow.com" value="admin@cashflow.com" required>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label for="login-password">Security Password</label>
+                    <div class="auth-input-group">
+                        <span class="auth-input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </span>
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••" value="password123" required>
+                    </div>
+                </div>
+
+                <div class="auth-options">
+                    <label class="auth-remember">
+                        <input type="checkbox" id="login-remember" checked>
+                        <span>Remember credentials</span>
+                    </label>
+                    <span class="text-muted font-bold" style="font-size:11px;">Default: admin / password123</span>
+                </div>
+
+                <div class="auth-field" style="margin-top:2px;">
+                    <label style="font-size:11px;color:var(--text-muted);">Quick-Fill Review Profiles:</label>
+                    <div class="auth-quick-fill">
+                        <button type="button" class="quick-fill-btn" onclick="Auth.quickFill('admin')">👤 Admin</button>
+                        <button type="button" class="quick-fill-btn" onclick="Auth.quickFill('auditor')">📋 Auditor</button>
+                        <button type="button" class="quick-fill-btn" onclick="Auth.quickFill('shopkeeper')">🏪 Shopkeeper</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit-btn">
+                    <span>Sign In to Financial Dashboard</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span>Secure Local Authentication &bull; Review - 2 Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">&#8377;</span>
+                <span class="logo-text">CASHFLOW</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-section-title">OPERATIONS</span>
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="transactions">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+                    </span>
+                    <span class="nav-label">Transactions</span>
+                </a>
+                <a href="#" class="nav-item" data-page="receivables">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </span>
+                    <span class="nav-label">Receivables</span>
+                </a>
+                <a href="#" class="nav-item" data-page="expenses">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 19H9.5a3.5 3.5 0 0 1 0-7h5a3.5 3.5 0 0 0 0-7H6"/><polyline points="15 3 19 7 15 11"/></svg>
+                    </span>
+                    <span class="nav-label">Expenses</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-section-title">INTELLIGENCE &amp; RISK</span>
+                <a href="#" class="nav-item" data-page="forecast">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </span>
+                    <span class="nav-label">Cash Forecast</span>
+                </a>
+                <a href="#" class="nav-item" data-page="whatif">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    </span>
+                    <span class="nav-label">What-If Simulator</span>
+                </a>
+                <a href="#" class="nav-item" data-page="warnings">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </span>
+                    <span class="nav-label">Early Warnings</span>
+                </a>
+                <a href="#" class="nav-item" data-page="communication">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </span>
+                    <span class="nav-label">Customer Outreach</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-section-title">AUDIT &amp; CONFIG</span>
+                <a href="#" class="nav-item" data-page="versions">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 9v12M18 9a9 9 0 0 0-9 9"/></svg>
+                    </span>
+                    <span class="nav-label">Versions &amp; Lineage</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </span>
+                    <span class="nav-label">Reports &amp; Export</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button id="csv-upload-btn" class="btn btn-primary btn-upload" title="Import accounting CSV dataset">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Import Dataset CSV</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button id="sidebar-toggle" class="btn-icon" title="Toggle Navigation Sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div class="breadcrumb-container">
+                    <span class="breadcrumb-scope">CASHFLOW</span>
+                    <span class="breadcrumb-sep">/</span>
+                    <h1 id="page-title" class="page-title">Dashboard</h1>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="global-filters">
+                    <select id="quick-demo-dataset" class="filter-select demo-select" title="Switch Demo Scenario" onchange="App.loadDemoDataset(this.value)">
+                        <option value="">⚡ Load Demo Scenario...</option>
+                        <option value="demo1">V1: Baseline Q3 Operations (25 txns)</option>
+                        <option value="demo2">V2: Rapid Expansion (30 txns)</option>
+                        <option value="demo3">V3: Liquidity Stress Crisis (35 txns)</option>
+                    </select>
+                    <select id="filter-version" class="filter-select" title="Active Accounting Version" onchange="App.onVersionChange(this.value)">
+                        <option value="">Latest Active Version</option>
+                    </select>
+                    <select id="filter-date-preset" class="filter-select" title="Analysis Window" onchange="App.onDatePresetChange(this.value)">
+                        <option value="">All Periods</option>
+                        <option value="7">Trailing 7 Days</option>
+                        <option value="30" selected>Trailing 30 Days</option>
+                        <option value="90">Full 90 Days</option>
+                    </select>
+                    <input type="date" id="filter-date-from" class="filter-input hidden">
+                    <input type="date" id="filter-date-to" class="filter-input hidden">
+                </div>
+                <div class="user-profile-widget" style="display:flex;align-items:center;gap:10px;">
+                    <div class="profile-pill" title="Active Financial Session">
+                        <span class="status-indicator"></span>
+                        <span class="profile-name" id="user-display-name">Finance Admin</span>
+                    </div>
+                    <button id="logout-btn" class="btn btn-sm btn-outline-danger" title="Sign out to Login Page" onclick="Auth.logout()" style="padding:5px 12px;font-size:12px;display:flex;align-items:center;gap:5px;border-radius:6px;background:transparent;border:1px solid var(--danger);color:var(--danger);cursor:pointer;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Container -->
+        <div class="page-container">
+            <!-- Dashboard Page: Executive Zero-Scroll Layout -->
+            <section id="page-dashboard" class="page active">
+                <!-- 8-Metric Single Horizontal Strip -->
+                <div class="dashboard-kpi-strip">
+                    <div class="kpi-card" id="kpi-current-cash">
+                        <div class="kpi-label">Current Cash</div>
+                        <div class="kpi-value" id="kpi-val-current-cash">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-current-cash">In-bank liquid balance</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-incoming">
+                        <div class="kpi-label">Expected Inflow</div>
+                        <div class="kpi-value text-success" id="kpi-val-incoming">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-incoming">Pending collections due</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-expenses">
+                        <div class="kpi-label">Upcoming Expenses</div>
+                        <div class="kpi-value text-danger" id="kpi-val-expenses">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-expenses">Pending commitments due</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-netcashflow">
+                        <div class="kpi-label">Net Cash Flow</div>
+                        <div class="kpi-value" id="kpi-val-netcashflow">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-netcashflow">Inflow minus outflow</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-receivables">
+                        <div class="kpi-label">Pending Recv</div>
+                        <div class="kpi-value" id="kpi-val-receivables">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-receivables">0 invoices on schedule</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-overdue">
+                        <div class="kpi-label">Overdue Defaulters</div>
+                        <div class="kpi-value text-danger" id="kpi-val-overdue">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-overdue">0 invoices delayed</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-forecast-min">
+                        <div class="kpi-label">Forecast Min Cash</div>
+                        <div class="kpi-value" id="kpi-val-forecast-min">&#8377;0</div>
+                        <div class="kpi-sub" id="kpi-sub-forecast-min">Cash floor threshold</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-risk">
+                        <div class="kpi-label">Risk Assessment</div>
+                        <div class="kpi-value" id="kpi-val-risk">LOW</div>
+                        <div class="kpi-sub" id="kpi-sub-risk">0 active warnings</div>
+                    </div>
+                </div>
+
+                <!-- Main Viewport: Charts & Commitments (No Page Scroll) -->
+                <div class="dashboard-main-grid">
+                    <!-- Left: Analytics & Liquidity Flow -->
+                    <div class="dashboard-left-col">
+                        <div class="dashboard-charts-split">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h3>Current Cash Dynamics (&#8377;)</h3>
+                                </div>
+                                <div class="chart-body">
+                                    <canvas id="chart-dynamics"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h3>Receivables Risk Exposure</h3>
+                                </div>
+                                <div class="chart-body">
+                                    <canvas id="chart-recv-ratio"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Historical Liquidity &amp; Daily Realized Cash Flow</h3>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="chart-cashflow"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Commitments & Alerts -->
+                    <div class="dashboard-right-col">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Upcoming Payment Commitments</h3>
+                            </div>
+                            <div class="chart-body">
+                                <div id="upcoming-payments-list" class="data-list">
+                                    <div class="empty-state">No upcoming payments scheduled</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header" style="justify-content:space-between;">
+                                <h3>Active Warnings &amp; Risk Radar</h3>
+                                <button class="btn btn-xs btn-outline-primary" onclick="App.navigateTo('communication')">Outreach</button>
+                            </div>
+                            <div class="chart-body">
+                                <div id="dashboard-warnings-list" class="data-list">
+                                    <div class="empty-state">System healthy &mdash; No active liquidity warnings</div>
+                                </div>
+                                <div id="recent-changes-list" class="data-list hidden">
+                                    <div class="empty-state">No recent ledger modifications</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Page -->
+            <section id="page-transactions" class="page">
+                <div class="page-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="txn-search" placeholder="Search by description, customer, supplier, phone, ID..." class="search-input" oninput="TransactionsPage.onSearchInput(this.value)">
+                    </div>
+                    <div class="toolbar-filters">
+                        <select id="txn-filter-type" class="filter-select" onchange="TransactionsPage.onFilterChange()">
+                            <option value="">All Flow Types</option>
+                            <option value="INCOME">Income Only</option>
+                            <option value="EXPENSE">Expense Only</option>
+                        </select>
+                        <select id="txn-filter-category" class="filter-select" onchange="TransactionsPage.onFilterChange()">
+                            <option value="">All Accounting Categories</option>
+                        </select>
+                        <select id="txn-filter-status" class="filter-select" onchange="TransactionsPage.onFilterChange()">
+                            <option value="">All Statuses</option>
+                            <option value="PAID">PAID</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="OVERDUE">OVERDUE</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="transaction_date" class="sortable">Date</th>
+                                <th data-sort="transaction_type" class="sortable">Type</th>
+                                <th data-sort="category" class="sortable">Category</th>
+                                <th>Description</th>
+                                <th data-sort="amount" class="sortable amount-col">Amount</th>
+                                <th>Entity / Customer</th>
+                                <th data-sort="due_date" class="sortable">Due Date</th>
+                                <th data-sort="status" class="sortable">Status</th>
+                                <th>Version</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <tr class="empty-row"><td colspan="10"><div class="empty-state">Loading accounting records...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="txn-pagination">
+                    <button class="btn btn-sm" id="txn-prev" onclick="TransactionsPage.prevPage()" disabled>&larr; Previous</button>
+                    <span class="pagination-info" id="txn-page-info">Page 1 of 1</span>
+                    <button class="btn btn-sm" id="txn-next" onclick="TransactionsPage.nextPage()" disabled>Next &rarr;</button>
+                </div>
+            </section>
+
+            <!-- Receivables Page -->
+            <section id="page-receivables" class="page">
+                <div class="receivables-summary" id="receivables-summary">
+                    <div class="kpi-card"><div class="kpi-label">Total Outstanding</div><div class="kpi-value" id="recv-total">&#8377;0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Overdue Portfolio</div><div class="kpi-value text-danger" id="recv-overdue">&#8377;0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Average Payment Delay</div><div class="kpi-value" id="recv-avg-delay">0 days</div></div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Receivables Aging Schedule</h3>
+                                <small class="text-muted">Outstanding exposure bucketed by aging term</small>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chart-recv-aging"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Customer Payment Delay Profiling</h3>
+                                <small class="text-muted">Average historical payment delays per debtor account</small>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chart-payment-delay"></canvas></div>
+                    </div>
+                </div>
+                <div class="toolbar-actions" style="margin-bottom: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="recv-search-input" class="form-input" placeholder="Filter customer, invoice, mobile..." style="max-width: 280px;" oninput="ReceivablesPage.setSearch(this.value)">
+                    <select id="recv-status-filter" class="form-input" style="max-width: 200px;" onchange="ReceivablesPage.setStatusFilter(this.value)">
+                        <option value="ALL">All Receivables</option>
+                        <option value="OVERDUE">Overdue Only</option>
+                        <option value="PENDING">Pending Only</option>
+                    </select>
+                    <span id="recv-count-badge" class="badge badge-info" style="margin-left: 8px;"></span>
+                    <div style="flex:1;"></div>
+                    <button class="btn btn-primary" onclick="App.navigateTo('communication')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        Open Communication Hub
+                    </button>
+                    <button class="btn btn-secondary" onclick="CommunicationPage.bulkAlertDefaulters()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Alert All Defaulters
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="receivables-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice</th>
+                                <th>Customer Account</th>
+                                <th>Mobile Contact</th>
+                                <th>Billing Email</th>
+                                <th class="amount-col">Outstanding</th>
+                                <th>Due Date</th>
+                                <th>Payment Status</th>
+                                <th style="min-width: 260px;">Outreach Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="receivables-tbody">
+                            <tr class="empty-row"><td colspan="8"><div class="empty-state">Loading receivables ledger...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Communication Page -->
+            <section id="page-communication" class="page">
+                <div class="receivables-summary" id="comm-summary-grid">
+                    <div class="kpi-card"><div class="kpi-label">Overdue Defaulters</div><div class="kpi-value text-danger" id="comm-kpi-defaulters">0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Total Outstanding</div><div class="kpi-value" id="comm-kpi-total-overdue">&#8377;0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Active Debtors</div><div class="kpi-value" id="comm-kpi-active-debtors">0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Phone Calls Logged</div><div class="kpi-value" id="comm-kpi-calls">0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">SMS Dispatched</div><div class="kpi-value" id="comm-kpi-sms">0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Emails Delivered</div><div class="kpi-value" id="comm-kpi-emails">0</div></div>
+                </div>
+
+                <div class="toolbar-actions comm-toolbar" style="margin-top: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="comm-search-input" class="form-input" placeholder="Search customer, mobile, email, invoice..." style="max-width: 300px;" oninput="CommunicationPage.setSearch(this.value)">
+                    <select id="comm-status-filter" class="form-input" style="max-width: 190px;" onchange="CommunicationPage.setStatusFilter(this.value)">
+                        <option value="ALL">All Account Statuses</option>
+                        <option value="OVERDUE">Overdue Defaulters Only</option>
+                        <option value="PENDING">Pending Invoices Only</option>
+                    </select>
+                    <select id="comm-channel-filter" class="form-input" style="max-width: 170px;" onchange="CommunicationPage.setChannelFilter(this.value)">
+                        <option value="ALL">All Channels</option>
+                        <option value="CALL">Phone Calls</option>
+                        <option value="SMS">SMS Reminders</option>
+                        <option value="EMAIL">Email Notices</option>
+                        <option value="BOTH">Dual-Party Sync</option>
+                    </select>
+                    <div style="flex: 1;"></div>
+                    <button class="btn btn-primary" id="comm-bulk-notify-btn" onclick="CommunicationPage.bulkAlertDefaulters()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Alert All Defaulters (Dual-Party)
+                    </button>
+                    <button class="btn btn-secondary" id="comm-refresh-btn" onclick="CommunicationPage.load()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                        Refresh Directory
+                    </button>
+                </div>
+
+                <div class="tab-bar" style="margin-top: 18px;">
+                    <button class="tab-btn comm-tab-btn active" data-tab="directory" onclick="CommunicationPage.switchTab('directory')">Customer Directory &amp; Direct Outreach</button>
+                    <button class="tab-btn comm-tab-btn" data-tab="logs" onclick="CommunicationPage.switchTab('logs')">Communication &amp; Call Audit Trail</button>
+                </div>
+
+                <!-- Directory Pane -->
+                <div id="comm-panel-directory" style="margin-top: 12px;">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer / Account</th>
+                                    <th>Mobile Phone</th>
+                                    <th>Billing Email</th>
+                                    <th class="amount-col">Total Balance</th>
+                                    <th class="amount-col">Overdue Portion</th>
+                                    <th>Status</th>
+                                    <th style="min-width: 270px;">Multi-Channel Outreach</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comm-directory-tbody">
+                                <tr class="empty-row"><td colspan="7"><div class="empty-state">Loading customer contacts...</div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Logs Pane -->
+                <div id="comm-panel-logs" style="margin-top: 12px; display: none;">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Customer Name</th>
+                                    <th>Target Contact</th>
+                                    <th>Channel</th>
+                                    <th>Dispatch Status</th>
+                                    <th>Message / Audit Summary</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comm-logs-tbody">
+                                <tr class="empty-row"><td colspan="6"><div class="empty-state">Loading communication logs...</div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Page -->
+            <section id="page-expenses" class="page">
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Expense Distribution by Category</h3>
+                                <small class="text-muted">Proportionate breakdown of operating expenditures</small>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chart-expense-category"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Periodic &amp; Projected Expense Trends</h3>
+                                <small class="text-muted">Realized monthly spend and projected recurring burn</small>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chart-monthly-expense"></canvas></div>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center;margin: 20px 0 10px;">
+                    <h3 class="section-title" style="margin:0;">Scheduled Recurring Commitments</h3>
+                    <button class="btn btn-primary btn-sm" id="add-recurring-btn">+ Add Recurring Commitment</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="recurring-table">
+                        <thead>
+                            <tr>
+                                <th>Obligation Description</th>
+                                <th>Category</th>
+                                <th class="amount-col">Amount</th>
+                                <th>Frequency</th>
+                                <th>Next Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recurring-tbody">
+                            <tr class="empty-row"><td colspan="7"><div class="empty-state">No recurring payment commitments defined</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="section-title" style="margin-top:24px;">Realized Expense Records</h3>
+                <div class="table-container">
+                    <table class="data-table" id="expenses-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th class="amount-col">Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-tbody">
+                            <tr class="empty-row"><td colspan="6"><div class="empty-state">Loading expense records...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Forecast Page -->
+            <section id="page-forecast" class="page">
+                <div class="receivables-summary" style="margin-bottom:16px;">
+                    <div class="kpi-card"><div class="kpi-label">Forecast Horizon</div><div class="kpi-value text-primary" id="forecast-summary-horizon">30 Days</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Projected Min Cash Floor</div><div class="kpi-value" id="forecast-summary-min">&#8377;0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Estimated Closing Balance</div><div class="kpi-value" id="forecast-summary-closing">&#8377;0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Safety Threshold Buffer</div><div class="kpi-value" id="forecast-summary-buffer">&#8377;0</div></div>
+                </div>
+
+                <div class="forecast-controls">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm forecast-period" id="forecast-btn-7" data-days="7" onclick="ForecastPage.setPeriod(7)">7 Days Horizon</button>
+                        <button type="button" class="btn btn-sm forecast-period active" id="forecast-btn-30" data-days="30" onclick="ForecastPage.setPeriod(30)">30 Days Horizon</button>
+                        <button type="button" class="btn btn-sm forecast-period" id="forecast-btn-60" data-days="60" onclick="ForecastPage.setPeriod(60)">60 Days Horizon</button>
+                        <button type="button" class="btn btn-sm forecast-period" id="forecast-btn-90" data-days="90" onclick="ForecastPage.setPeriod(90)">90 Days Horizon</button>
+                    </div>
+                    <div class="forecast-note">
+                        Forward-looking cash projections integrate pending receivables, collections, and recurring obligations.
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Forward Liquidity Runway &amp; Safety Threshold Curve</h3>
+                                <small class="text-muted">Closing cash floor curve plotted against red dashed safe operating threshold</small>
+                            </div>
+                        </div>
+                        <div class="chart-body chart-tall"><canvas id="chart-forecast"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Daily Forecast Breakdown Ledger</h3>
+                                <small class="text-muted">Day-by-day opening balance, expected inflows, outflows, and projected closing cash</small>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="table-container">
+                                <table class="data-table" id="forecast-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Forecast Date</th>
+                                            <th class="amount-col">Opening Cash</th>
+                                            <th class="amount-col">Expected Inflow</th>
+                                            <th class="amount-col">Expected Outflow</th>
+                                            <th class="amount-col">Projected Closing Cash</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="forecast-tbody">
+                                        <tr class="empty-row"><td colspan="5"><div class="empty-state">Loading forward forecast...</div></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Warnings & Anomalies Page -->
+            <section id="page-warnings" class="page">
+                <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="warnings-tab" onclick="WarningsPage.switchTab('warnings-tab')">Liquidity Breach Warnings</button>
+                    <button class="tab-btn" data-tab="anomalies-tab" onclick="WarningsPage.switchTab('anomalies-tab')">Statistical Anomaly Radar</button>
+                </div>
+
+                <div id="warnings-tab" class="tab-content active">
+                    <div id="warnings-list" class="warnings-container">
+                        <div class="empty-state">No warnings detected &mdash; financial runway is healthy</div>
+                    </div>
+                </div>
+
+                <div id="anomalies-tab" class="tab-content">
+                    <div class="table-container">
+                        <table class="data-table" id="anomalies-table">
+                            <thead>
+                                <tr>
+                                    <th>Anomaly Classification</th>
+                                    <th>Severity</th>
+                                    <th>Associated Transaction</th>
+                                    <th class="amount-col">Baseline Expectation</th>
+                                    <th class="amount-col">Realized Amount</th>
+                                    <th>Analytical Explanation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="anomalies-tbody">
+                                <tr class="empty-row"><td colspan="6"><div class="empty-state">No statistical anomalies detected</div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Versions & Changes Page -->
+            <section id="page-versions" class="page">
+                <div class="versions-layout">
+                    <div class="versions-list-panel">
+                        <h3 class="section-title">Dataset Version Catalog</h3>
+                        <div id="versions-list" class="versions-list">
+                            <div class="empty-state">No version history available</div>
+                        </div>
+                    </div>
+                    <div class="version-detail-panel">
+                        <h3 class="section-title">Version Metadata &amp; Delta Summary</h3>
+                        <div id="version-detail" class="version-detail">
+                            <div class="empty-state">Select a version from the left catalog</div>
+                        </div>
+
+                        <h3 class="section-title" style="margin-top:20px;">Differential Version Comparator</h3>
+                        <div class="compare-controls">
+                            <select id="compare-v1" class="filter-select" onchange="VersionsPage.compareVersions()"><option value="">Select Baseline Version</option></select>
+                            <span class="text-muted font-bold">&rarr;</span>
+                            <select id="compare-v2" class="filter-select" onchange="VersionsPage.compareVersions()"><option value="">Select Target Version</option></select>
+                            <button class="btn btn-primary" id="compare-btn" onclick="VersionsPage.compareVersions()">Calculate Differences</button>
+                        </div>
+                        <div id="compare-result" class="compare-result">
+                            <div class="empty-state">Select two versions above to compute differential delta</div>
+                        </div>
+
+                        <h3 class="section-title" style="margin-top:20px;">Delta Change Distribution</h3>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Added, Modified, and Removed Records</h3>
+                            </div>
+                            <div class="chart-body"><canvas id="chart-changes"></canvas></div>
+                        </div>
+                        <div class="table-container" style="margin-top:14px;">
+                            <table class="data-table" id="changes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Delta Type</th>
+                                        <th>Attribute Field</th>
+                                        <th>Previous Value</th>
+                                        <th>Target Value</th>
+                                        <th>Changed Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="changes-tbody">
+                                    <tr class="empty-row"><td colspan="6"><div class="empty-state">Select a version to inspect granular changes</div></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="section-title" style="margin-top:24px;">Dataset Ingestion Timeline</h3>
+                        <div id="timeline-container" class="timeline-container">
+                            <div class="empty-state">No dataset timeline records</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- What-If Simulator Page -->
+            <section id="page-whatif" class="page">
+                <div class="whatif-layout">
+                    <div class="whatif-form-panel">
+                        <h3 class="section-title">Stress Simulation Parameters</h3>
+                        <p class="text-muted" style="font-size:12px;margin-bottom:8px;">Quick-load standard stress scenarios or inject custom cash-flow shocks:</p>
+                        <div class="scenario-presets">
+                            <button type="button" class="preset-chip" onclick="WhatIfPage.loadPreset('DEBTOR_DELAY')">
+                                <span>💳</span> 30-Day Client Delay (₹60k)
+                            </button>
+                            <button type="button" class="preset-chip" onclick="WhatIfPage.loadPreset('EMERGENCY_SHOCK')">
+                                <span>⚡</span> Emergency Capex (₹75k)
+                            </button>
+                            <button type="button" class="preset-chip" onclick="WhatIfPage.loadPreset('REVENUE_DIP')">
+                                <span>📉</span> 25% Demand Dip (-₹50k)
+                            </button>
+                            <button type="button" class="preset-chip" onclick="WhatIfPage.loadPreset('INFLATION_HIKE')">
+                                <span>📦</span> Cost Inflation (+₹40k)
+                            </button>
+                        </div>
+
+                        <form id="scenario-form" class="form" onsubmit="event.preventDefault(); WhatIfPage.runScenario(event); return false;">
+                            <div class="form-group">
+                                <label>Simulation Title</label>
+                                <input type="text" id="scenario-name" class="form-input" placeholder="e.g. 15-Day Major Customer Remittance Delay" value="Custom Liquidity Stress Test" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Analytical Context</label>
+                                <textarea id="scenario-desc" class="form-input" rows="2" placeholder="Model liquidity impact if debtor payments stall or expenses surge...">Simulating cash runway under customized operating shocks.</textarea>
+                            </div>
+
+                            <h4 style="margin-top:8px;">Financial Adjustments</h4>
+                            <div id="adjustments-container">
+                                <div class="adjustment-row">
+                                    <select class="filter-select adj-type">
+                                        <option value="DELAY_PAYMENT">Delay Customer Receivables</option>
+                                        <option value="INCREASE_EXPENSE">Increase Operating Expenses</option>
+                                        <option value="DECREASE_INCOME">Decrease Revenue Inflows</option>
+                                        <option value="ADD_EXPENSE">Inject Emergency Expense Shock</option>
+                                    </select>
+                                    <input type="text" class="form-input adj-desc" placeholder="Shock Label" value="Key Client Delay">
+                                    <input type="number" class="form-input adj-amount" placeholder="Amount (&#8377;)" value="30000">
+                                    <input type="date" class="form-input adj-date">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.parentElement.remove()" title="Remove Adjustment">✕</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-secondary" id="add-adjustment-btn">+ Add Adjustment</button>
+
+                            <div class="form-actions" style="margin-top:16px;">
+                                <button type="submit" class="btn btn-primary">Run Simulation</button>
+                                <button type="button" class="btn btn-secondary" id="scenario-reset-btn" onclick="WhatIfPage.resetForm()">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="whatif-result-panel">
+                        <h3 class="section-title">Simulation Trajectory</h3>
+                        <div id="scenario-result">
+                            <div class="empty-state">Select a preset or configure parameters and run simulation</div>
+                        </div>
+                        <div class="chart-card" id="scenario-chart-card" style="display:none;margin-top:16px;">
+                            <div class="chart-header">
+                                <div>
+                                    <h3>Baseline Projection vs. Stressed Simulation</h3>
+                                    <small class="text-muted">Evaluate breach risk under hypothetical macroeconomic conditions</small>
+                                </div>
+                            </div>
+                            <div class="chart-body chart-tall"><canvas id="chart-scenario"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports & Export Page -->
+            <section id="page-reports" class="page">
+                <div class="report-controls">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Audit Date From</label>
+                            <input type="date" id="report-from" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Audit Date To</label>
+                            <input type="date" id="report-to" class="form-input">
+                        </div>
+                        <div class="form-group" style="align-self:end;">
+                            <button class="btn btn-primary" id="generate-report-btn" onclick="ReportsPage.generateReport()">Generate Comprehensive Statement</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="report-content" class="report-content">
+                    <div class="empty-state">Define a date range and click generate statement</div>
+                </div>
+
+                <div class="report-actions" id="report-actions" style="display:none;">
+                    <button class="btn btn-primary" id="export-csv-btn" onclick="ReportsPage.exportCsv()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export Accounting CSV
+                    </button>
+                    <button class="btn btn-secondary" id="print-report-btn" onclick="window.print()">Print Statement</button>
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section id="page-settings" class="page">
+                <div class="settings-layout">
+                    <div class="settings-section">
+                        <h3 class="section-title">Enterprise Business Configuration</h3>
+                        <form id="business-form" class="form" onsubmit="event.preventDefault(); SettingsPage.saveSettings(event); return false;">
+                            <div class="form-group">
+                                <label>Registered Business Entity Name</label>
+                                <input type="text" id="setting-business-name" class="form-input" placeholder="Your Registered Business Name" value="Acme Enterprise Pvt Ltd">
+                            </div>
+                            <div class="form-group">
+                                <label>Shopkeeper Mobile Phone (Outbound Sender &amp; Dual-Party Audit)</label>
+                                <input type="text" id="setting-phone" class="form-input" placeholder="+91 98765 00000" value="+91 98765 00000">
+                            </div>
+                            <div class="form-group">
+                                <label>Shopkeeper Email Address (Remittance Inquiries &amp; Audit CC)</label>
+                                <input type="email" id="setting-email" class="form-input" placeholder="shopkeeper@cashflow.com" value="shopkeeper@cashflow.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Primary Currency Standard</label>
+                                <select id="setting-currency" class="form-input">
+                                    <option value="INR" selected>&#8377; INR &mdash; Indian Rupee</option>
+                                    <option value="USD">$ USD &mdash; US Dollar</option>
+                                    <option value="EUR">&euro; EUR &mdash; Euro</option>
+                                    <option value="GBP">&pound; GBP &mdash; British Pound</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Safe Operating Cash Threshold (&#8377;)</label>
+                                <input type="number" id="setting-threshold" class="form-input" placeholder="50000" value="50000" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Default Forward Forecasting Horizon</label>
+                                <select id="setting-forecast-days" class="form-input">
+                                    <option value="30">30 Days</option>
+                                    <option value="60">60 Days</option>
+                                    <option value="90" selected>90 Days</option>
+                                    <option value="180">180 Days</option>
+                                </select>
+                            </div>
+                            <div class="form-actions" style="margin-top:10px;">
+                                <button type="submit" class="btn btn-primary">Save Business Settings</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 class="section-title">Color Theme &amp; Visual Palette</h3>
+                        <div class="theme-grid" id="theme-grid">
+                            <div class="theme-card active" data-theme="theme-arctic-ledger" onclick="SettingsPage.selectTheme('theme-arctic-ledger')">
+                                <div class="theme-preview arctic-preview"></div>
+                                <span>Arctic Ledger</span>
+                            </div>
+                            <div class="theme-card" data-theme="theme-forest-ledger" onclick="SettingsPage.selectTheme('theme-forest-ledger')">
+                                <div class="theme-preview forest-preview"></div>
+                                <span>Forest Ledger</span>
+                            </div>
+                            <div class="theme-card" data-theme="theme-copper-desk" onclick="SettingsPage.selectTheme('theme-copper-desk')">
+                                <div class="theme-preview copper-preview"></div>
+                                <span>Copper Desk</span>
+                            </div>
+                            <div class="theme-card" data-theme="theme-ocean-glass" onclick="SettingsPage.selectTheme('theme-ocean-glass')">
+                                <div class="theme-preview ocean-preview"></div>
+                                <span>Ocean Glass</span>
+                            </div>
+                            <div class="theme-card" data-theme="theme-paper-ink" onclick="SettingsPage.selectTheme('theme-paper-ink')">
+                                <div class="theme-preview paper-preview"></div>
+                                <span>Paper &amp; Ink</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- CSV Upload Modal -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Dataset CSV</h2>
+                <button class="modal-close" id="upload-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <p style="font-weight:600;margin-top:8px;">Drag &amp; drop your accounting CSV file here</p>
+                    <p class="upload-hint">Standard 13-column schema including customer_phone and customer_email</p>
+                    <input type="file" id="csv-file-input" accept=".csv" style="display:none">
+                </div>
+                <div id="upload-progress" class="upload-progress hidden">
+                    <div class="progress-bar"><div class="progress-fill" id="upload-progress-fill"></div></div>
+                    <p id="upload-status">Processing and calculating version deltas...</p>
+                </div>
+                <div id="upload-result" class="upload-result hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recurring Payment Modal -->
+    <div id="recurring-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="recurring-modal-title">Add Recurring Obligation</h2>
+                <button class="modal-close" id="recurring-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="recurring-form" class="form" onsubmit="event.preventDefault(); ExpensesPage.saveRecurring(event); return false;">
+                    <input type="hidden" id="recurring-edit-id">
+                    <div class="form-group">
+                        <label>Obligation Description</label>
+                        <input type="text" id="recurring-desc" class="form-input" required placeholder="e.g. Headquarters Office Lease">
+                    </div>
+                    <div class="form-group">
+                        <label>Expenditure Category</label>
+                        <select id="recurring-category" class="form-input">
+                            <option value="Rent">Rent</option>
+                            <option value="Salary">Salaries &amp; Payroll</option>
+                            <option value="Utilities">Utilities &amp; Power</option>
+                            <option value="Software">Software &amp; Cloud Subscriptions</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Inventory">Raw Materials / Inventory</option>
+                            <option value="Other">Other Commitments</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Recurring Amount (&#8377;)</label>
+                        <input type="number" id="recurring-amount" class="form-input" required min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Frequency Period</label>
+                        <select id="recurring-frequency" class="form-input">
+                            <option value="MONTHLY">Monthly</option>
+                            <option value="WEEKLY">Weekly</option>
+                            <option value="DAILY">Daily</option>
+                            <option value="QUARTERLY">Quarterly</option>
+                            <option value="YEARLY">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Next Due Remittance Date</label>
+                        <input type="date" id="recurring-next-due" class="form-input" required>
+                    </div>
+                    <div class="form-actions" style="margin-top:14px;">
+                        <button type="submit" class="btn btn-primary">Save Commitment</button>
+                        <button type="button" class="btn btn-secondary" id="recurring-cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Detail Modal -->
+    <div id="txn-detail-modal" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Transaction Audit Details</h2>
+                <button class="modal-close" id="txn-detail-close">&times;</button>
+            </div>
+            <div class="modal-body" id="txn-detail-body">
+            </div>
+        </div>
+    </div>
+
+    <!-- Communication: Call Modal -->
+    <div id="comm-call-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Direct Customer Voice Call</h2>
+                <button class="modal-close" id="comm-call-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="comm-call-form" onsubmit="event.preventDefault(); CommunicationPage.handleCallSubmit(event); return false;">
+                    <input type="hidden" id="call-modal-txnid">
+                    <input type="hidden" id="call-modal-customer">
+                    <input type="hidden" id="call-modal-phone">
+                    <input type="hidden" id="call-modal-amount">
+
+                    <div class="comm-modal-info">
+                        <div class="report-row"><span class="label">Debtor / Customer</span><span class="value font-bold" id="call-modal-display-customer">&mdash;</span></div>
+                        <div class="report-row"><span class="label">Registered Mobile</span><span class="value font-bold" id="call-modal-display-phone">&mdash;</span></div>
+                        <div class="report-row"><span class="label">Outstanding Balance</span><span class="value text-danger font-bold" id="call-modal-display-amount">&#8377;0</span></div>
+                    </div>
+
+                    <div style="margin: 14px 0 10px;">
+                        <a id="call-modal-tel-link" href="#" class="btn btn-primary" style="width:100%;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            Launch Telephone Dialer (tel:)
+                        </a>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Call Outcome &amp; Settlement Notes:</label>
+                        <textarea id="call-modal-notes" class="form-input" rows="3" placeholder="e.g. Spoke with accounts payable officer; payment promised by Friday..."></textarea>
+                    </div>
+
+                    <div class="form-actions" style="margin-top:14px;">
+                        <button type="submit" class="btn btn-primary">Save Call &amp; Log Audit Event</button>
+                        <button type="button" class="btn btn-secondary" id="comm-call-cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Communication: SMS Modal -->
+    <div id="comm-sms-modal" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Dispatch SMS Notice (Dual-Party Outreach)</h2>
+                <button class="modal-close" id="comm-sms-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="comm-sms-form" onsubmit="event.preventDefault(); CommunicationPage.handleSmsSubmit(event); return false;">
+                    <input type="hidden" id="sms-modal-txnid">
+                    <input type="hidden" id="sms-modal-customer">
+                    <input type="hidden" id="sms-modal-phone">
+                    <input type="hidden" id="sms-modal-amount">
+
+                    <div class="form-group">
+                        <label>SMS Text Preview (Dispatches to Customer &amp; Shopkeeper Audit Copy):</label>
+                        <textarea id="sms-modal-body" class="form-input" rows="4"></textarea>
+                        <small class="text-muted" style="margin-top:4px;display:block;">Character count: <span id="sms-modal-char-count">0</span> / 160</small>
+                    </div>
+
+                    <div class="form-actions" style="margin-top:14px;">
+                        <button type="submit" class="btn btn-primary">Dispatch SMS Reminders</button>
+                        <button type="button" class="btn btn-secondary" id="comm-sms-cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Communication: Email Modal -->
+    <div id="comm-email-modal" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Dispatch Billing Statement (Dual-Party Audit)</h2>
+                <button class="modal-close" id="comm-email-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="comm-email-form" onsubmit="event.preventDefault(); CommunicationPage.handleEmailSubmit(event); return false;">
+                    <input type="hidden" id="email-modal-txnid">
+                    <input type="hidden" id="email-modal-customer">
+                    <input type="hidden" id="email-modal-email">
+                    <input type="hidden" id="email-modal-amount">
+
+                    <div class="form-group">
+                        <label>Statement Subject Line:</label>
+                        <input type="text" id="email-modal-subject" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Formal Remittance Statement Body:</label>
+                        <textarea id="email-modal-body" class="form-input" rows="8"></textarea>
+                    </div>
+
+                    <div class="form-actions" style="margin-top:14px;">
+                        <button type="submit" class="btn btn-primary">Send Statement &amp; Log Audit</button>
+                        <button type="button" class="btn btn-secondary" id="comm-email-cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts: 100% Offline-Ready & Self-Contained -->
+    <script src="js/api.js?v=2.2"></script>
+    <script src="js/utils.js?v=2.2"></script>
+    <script src="js/charts.js?v=2.2"></script>
+    <script src="js/dashboard.js?v=2.2"></script>
+    <script src="js/transactions.js?v=2.2"></script>
+    <script src="js/communication.js?v=2.2"></script>
+    <script src="js/receivables.js?v=2.2"></script>
+    <script src="js/expenses.js?v=2.2"></script>
+    <script src="js/forecast.js?v=2.2"></script>
+    <script src="js/warnings.js?v=2.2"></script>
+    <script src="js/versions.js?v=2.2"></script>
+    <script src="js/timeline.js?v=2.2"></script>
+    <script src="js/whatif.js?v=2.2"></script>
+    <script src="js/reports.js?v=2.2"></script>
+    <script src="js/settings.js?v=2.2"></script>
+    <script src="js/auth.js?v=2.3"></script>
+    <script src="js/app.js?v=2.2"></script>
+</body>
+</html>
