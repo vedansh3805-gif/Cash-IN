@@ -1,0 +1,12 @@
+transaction_id,transaction_date,transaction_type,category,description,amount,customer,customer_phone,customer_email,supplier,due_date,status,payment_date
+TXN001,2026-06-01,INCOME,Sales,Product A Sales,150000.0,ABC Ltd,+91-98765-10001,billing@abcltd.com,,2026-06-15,PAID,2026-06-14
+TXN002,2026-06-02,EXPENSE,Rent,Office Rent June,50000.0,,,,Prime Estates,2026-06-05,PAID,2026-06-03
+TXN003,2026-06-05,INCOME,Sales,Product B Sales,200000.0,XYZ Corp,+91-98765-10002,accounts@xyzcorp.com,,2026-07-05,PAID,2026-07-02
+TXN004,2026-06-10,EXPENSE,Salary,Employee Salaries,120000.0,,,,,2026-06-10,PAID,2026-06-10
+TXN005,2026-06-12,EXPENSE,Utilities,Electricity Bill,15000.0,,,,PowerCo,2026-06-25,PAID,2026-06-24
+TXN006,2026-06-15,INCOME,Consulting,IT Consulting,75000.0,PQR Industries,+91-98765-10003,finance@pqrind.com,,2026-06-30,PAID,2026-07-01
+TXN007,2026-06-18,EXPENSE,Inventory,Raw Materials,85000.0,,,,Supplies Inc,2026-07-01,PAID,2026-06-30
+TXN008,2026-06-20,EXPENSE,Marketing,Facebook Ads,25000.0,,,,Meta,2026-06-25,PAID,2026-06-25
+TXN009,2026-06-25,INCOME,Sales,Product C Sales,90000.0,LMN Corp,+91-98765-10004,payments@lmncorp.com,,2026-07-10,PENDING,
+TXN011,2026-07-01,EXPENSE,Rent,Office Rent July,50000.0,,,,Prime Estates,2026-07-05,PENDING,
+TXN012,2026-07-05,INCOME,Sales,Product A Sales,160000.0,ABC Ltd,+91-98765-10001,billing@abcltd.com,,2026-07-20,PENDING,

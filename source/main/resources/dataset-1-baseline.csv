@@ -1,0 +1,26 @@
+transaction_id,transaction_date,transaction_type,category,description,amount,customer,customer_phone,customer_email,supplier,due_date,status,payment_date
+TXN001,2026-06-01,INCOME,Sales,Enterprise Software License,180000.0,ABC Ltd,+91-98765-10001,billing@abcltd.com,,2026-06-15,PAID,2026-06-14
+TXN002,2026-06-02,EXPENSE,Rent,HQ Office Rent June,50000.0,,,,Prime Estates,2026-06-05,PAID,2026-06-04
+TXN003,2026-06-05,INCOME,Sales,Wholesale Merchandise Batch 1,220000.0,XYZ Corp,+91-98765-10002,accounts@xyzcorp.com,,2026-06-20,PAID,2026-06-18
+TXN004,2026-06-10,EXPENSE,Salary,Monthly Payroll June,120000.0,,,,,2026-06-10,PAID,2026-06-10
+TXN005,2026-06-12,EXPENSE,Utilities,Grid Power & Water June,14000.0,,,,PowerCo,2026-06-25,PAID,2026-06-22
+TXN006,2026-06-15,INCOME,Consulting,Cloud Architecture Retainer,75000.0,PQR Industries,+91-98765-10003,finance@pqrind.com,,2026-06-30,OVERDUE,
+TXN007,2026-06-18,EXPENSE,Inventory,Component Raw Materials,85000.0,,,,Supplies Inc,2026-06-28,PAID,2026-06-28
+TXN008,2026-06-20,EXPENSE,Marketing,Q3 Digital Ad Campaign,30000.0,,,,Meta Ads,2026-06-25,PAID,2026-06-25
+TXN009,2026-06-25,INCOME,Sales,Product C Distribution,95000.0,LMN Corp,+91-98765-10004,payments@lmncorp.com,,2026-07-02,PENDING,
+TXN010,2026-06-28,EXPENSE,Logistics,Freight Shipping Services,16000.0,,,,FastCourier,2026-07-05,PENDING,
+TXN011,2026-07-01,EXPENSE,Rent,HQ Office Rent July,50000.0,,,,Prime Estates,2026-07-05,PENDING,
+TXN012,2026-07-05,INCOME,Sales,Enterprise Support Contract,160000.0,Global Tech,+91-98765-10005,finance@globaltech.in,,2026-07-15,PENDING,
+TXN013,2026-07-08,EXPENSE,Salary,Monthly Payroll July,125000.0,,,,,2026-07-10,PENDING,
+TXN014,2026-07-12,EXPENSE,Utilities,Server Hosting AWS,22000.0,,,,CloudHost,2026-07-20,PENDING,
+TXN015,2026-07-15,INCOME,Sales,Wholesale Retail Order Q3,190000.0,Retail Mart,+91-98765-10006,orders@retailmart.com,,2026-07-28,PENDING,
+TXN016,2026-07-20,EXPENSE,Inventory,Packaging Materials,35000.0,,,,PackWell Corp,2026-07-31,PENDING,
+TXN017,2026-07-25,INCOME,Sales,Custom Fabrication Milestone,140000.0,Zenith Exports,+91-98765-10007,accounts@zenithexports.com,,2026-08-10,PENDING,
+TXN018,2026-08-01,EXPENSE,Rent,HQ Office Rent August,50000.0,,,,Prime Estates,2026-08-05,PENDING,
+TXN019,2026-08-05,INCOME,Sales,Export Consignment Batch 2,210000.0,ABC Ltd,+91-98765-10001,billing@abcltd.com,,2026-08-18,PENDING,
+TXN020,2026-08-10,EXPENSE,Salary,Monthly Payroll August,125000.0,,,,,2026-08-10,PENDING,
+TXN021,2026-08-15,EXPENSE,Marketing,Industry Expo Sponsorship,40000.0,,,,TradeExpo,2026-08-22,PENDING,
+TXN022,2026-08-18,INCOME,Consulting,Strategic Advisory Q3,85000.0,XYZ Corp,+91-98765-10002,accounts@xyzcorp.com,,2026-08-28,PENDING,
+TXN023,2026-08-22,EXPENSE,Tax,Quarterly GST Advance,45000.0,,,,Tax Authority,2026-08-25,PENDING,
+TXN024,2026-08-25,INCOME,Sales,Product B Resupply Order,175000.0,Retail Mart,+91-98765-10006,orders@retailmart.com,,2026-09-05,PENDING,
+TXN025,2026-08-28,EXPENSE,Logistics,Domestic Dispatch Logistics,18000.0,,,,FastCourier,2026-09-08,PENDING,
