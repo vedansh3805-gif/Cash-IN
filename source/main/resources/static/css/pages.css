@@ -1,0 +1,26 @@
+/* ============================================
+   CashFlow — Page-Specific Styles
+   ============================================ */
+
+/* ---- Dashboard-specific ---- */
+#page-dashboard .kpi-grid {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ---- Print Styles ---- */
+@media print {
+    .sidebar, .topbar, .btn, .modal, .toast-container {
+        display: none !important;
+    }
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
+    .page-container {
+        padding: 10px;
+    }
+    .report-content {
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+}

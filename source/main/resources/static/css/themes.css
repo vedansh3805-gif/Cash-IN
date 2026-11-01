@@ -1,0 +1,254 @@
+/* ============================================
+   CashFlow — Five Professional Themes
+   ============================================ */
+
+:root {
+    --transition-speed: 0.3s;
+}
+
+/* ---- Theme 1: Arctic Ledger ---- */
+.theme-arctic-ledger {
+    --bg-primary: #0f1729;
+    --bg-secondary: #1a2340;
+    --bg-surface: #1e2a4a;
+    --bg-card: #243056;
+    --bg-hover: #2d3a66;
+    --bg-input: #1a2340;
+    --border-color: #2d3a66;
+    --border-light: #374470;
+
+    --text-primary: #e8edf5;
+    --text-secondary: #a0aec0;
+    --text-muted: #718096;
+    --text-inverse: #0f1729;
+
+    --accent-primary: #4da6ff;
+    --accent-secondary: #38b2ac;
+    --accent-hover: #63b3ff;
+
+    --success: #48bb78;
+    --success-bg: rgba(72, 187, 120, 0.15);
+    --warning: #ecc94b;
+    --warning-bg: rgba(236, 201, 75, 0.15);
+    --danger: #fc8181;
+    --danger-bg: rgba(252, 129, 129, 0.15);
+    --info: #63b3ed;
+    --info-bg: rgba(99, 179, 237, 0.15);
+
+    --sidebar-bg: #0d1322;
+    --sidebar-text: #a0aec0;
+    --sidebar-active: #4da6ff;
+    --sidebar-active-bg: rgba(77, 166, 255, 0.12);
+
+    --chart-1: #4da6ff;
+    --chart-2: #38b2ac;
+    --chart-3: #ecc94b;
+    --chart-4: #fc8181;
+    --chart-5: #b794f4;
+    --chart-6: #f687b3;
+
+    --shadow: rgba(0, 0, 0, 0.3);
+    --scrollbar-bg: #1a2340;
+    --scrollbar-thumb: #374470;
+}
+
+/* ---- Theme 2: Forest Ledger ---- */
+.theme-forest-ledger {
+    --bg-primary: #1a2e1a;
+    --bg-secondary: #243524;
+    --bg-surface: #2d3e2d;
+    --bg-card: #344534;
+    --bg-hover: #3d4e3d;
+    --bg-input: #243524;
+    --border-color: #3d4e3d;
+    --border-light: #4a5f4a;
+
+    --text-primary: #f0f4e8;
+    --text-secondary: #b8c9a0;
+    --text-muted: #8a9d70;
+    --text-inverse: #1a2e1a;
+
+    --accent-primary: #6abf69;
+    --accent-secondary: #a3c585;
+    --accent-hover: #7dd07c;
+
+    --success: #68d391;
+    --success-bg: rgba(104, 211, 145, 0.15);
+    --warning: #f6e05e;
+    --warning-bg: rgba(246, 224, 94, 0.15);
+    --danger: #fc8181;
+    --danger-bg: rgba(252, 129, 129, 0.15);
+    --info: #76e4f7;
+    --info-bg: rgba(118, 228, 247, 0.15);
+
+    --sidebar-bg: #152015;
+    --sidebar-text: #b8c9a0;
+    --sidebar-active: #6abf69;
+    --sidebar-active-bg: rgba(106, 191, 105, 0.12);
+
+    --chart-1: #6abf69;
+    --chart-2: #a3c585;
+    --chart-3: #f6e05e;
+    --chart-4: #fc8181;
+    --chart-5: #76e4f7;
+    --chart-6: #f6ad55;
+
+    --shadow: rgba(0, 0, 0, 0.3);
+    --scrollbar-bg: #243524;
+    --scrollbar-thumb: #4a5f4a;
+}
+
+/* ---- Theme 3: Copper Desk ---- */
+.theme-copper-desk {
+    --bg-primary: #1f1d1b;
+    --bg-secondary: #2a2725;
+    --bg-surface: #342f2b;
+    --bg-card: #3d3733;
+    --bg-hover: #47403b;
+    --bg-input: #2a2725;
+    --border-color: #47403b;
+    --border-light: #584f49;
+
+    --text-primary: #f5ede4;
+    --text-secondary: #c4b5a4;
+    --text-muted: #9a8b79;
+    --text-inverse: #1f1d1b;
+
+    --accent-primary: #cd7f32;
+    --accent-secondary: #d4a066;
+    --accent-hover: #d99044;
+
+    --success: #68d391;
+    --success-bg: rgba(104, 211, 145, 0.15);
+    --warning: #f6e05e;
+    --warning-bg: rgba(246, 224, 94, 0.15);
+    --danger: #e27d6e;
+    --danger-bg: rgba(226, 125, 110, 0.15);
+    --info: #76a9d4;
+    --info-bg: rgba(118, 169, 212, 0.15);
+
+    --sidebar-bg: #1a1816;
+    --sidebar-text: #c4b5a4;
+    --sidebar-active: #cd7f32;
+    --sidebar-active-bg: rgba(205, 127, 50, 0.12);
+
+    --chart-1: #cd7f32;
+    --chart-2: #d4a066;
+    --chart-3: #f6e05e;
+    --chart-4: #e27d6e;
+    --chart-5: #76a9d4;
+    --chart-6: #68d391;
+
+    --shadow: rgba(0, 0, 0, 0.35);
+    --scrollbar-bg: #2a2725;
+    --scrollbar-thumb: #584f49;
+}
+
+/* ---- Theme 4: Ocean Glass ---- */
+.theme-ocean-glass {
+    --bg-primary: #0a1628;
+    --bg-secondary: #112240;
+    --bg-surface: #162a50;
+    --bg-card: #1c3460;
+    --bg-hover: #234070;
+    --bg-input: #112240;
+    --border-color: #234070;
+    --border-light: #2a4d82;
+
+    --text-primary: #e6f1ff;
+    --text-secondary: #8892b0;
+    --text-muted: #616e8a;
+    --text-inverse: #0a1628;
+
+    --accent-primary: #00bfa5;
+    --accent-secondary: #64ffda;
+    --accent-hover: #26d9b8;
+
+    --success: #64ffda;
+    --success-bg: rgba(100, 255, 218, 0.1);
+    --warning: #ffd54f;
+    --warning-bg: rgba(255, 213, 79, 0.12);
+    --danger: #ff6b6b;
+    --danger-bg: rgba(255, 107, 107, 0.12);
+    --info: #74b9ff;
+    --info-bg: rgba(116, 185, 255, 0.12);
+
+    --sidebar-bg: #071020;
+    --sidebar-text: #8892b0;
+    --sidebar-active: #64ffda;
+    --sidebar-active-bg: rgba(100, 255, 218, 0.08);
+
+    --chart-1: #00bfa5;
+    --chart-2: #64ffda;
+    --chart-3: #ffd54f;
+    --chart-4: #ff6b6b;
+    --chart-5: #74b9ff;
+    --chart-6: #a29bfe;
+
+    --shadow: rgba(0, 0, 0, 0.4);
+    --scrollbar-bg: #112240;
+    --scrollbar-thumb: #2a4d82;
+}
+
+/* ---- Theme 5: Paper & Ink ---- */
+.theme-paper-ink {
+    --bg-primary: #f7f4ef;
+    --bg-secondary: #ede8e0;
+    --bg-surface: #e5dfd5;
+    --bg-card: #ffffff;
+    --bg-hover: #f0ece5;
+    --bg-input: #ffffff;
+    --border-color: #d6cfc3;
+    --border-light: #e5dfd5;
+
+    --text-primary: #2d2d2d;
+    --text-secondary: #5a5a5a;
+    --text-muted: #8a8a8a;
+    --text-inverse: #f7f4ef;
+
+    --accent-primary: #8b1a2b;
+    --accent-secondary: #c5a547;
+    --accent-hover: #a52238;
+
+    --success: #2d8a4e;
+    --success-bg: rgba(45, 138, 78, 0.1);
+    --warning: #c5a547;
+    --warning-bg: rgba(197, 165, 71, 0.1);
+    --danger: #c53030;
+    --danger-bg: rgba(197, 48, 48, 0.1);
+    --info: #3182ce;
+    --info-bg: rgba(49, 130, 206, 0.1);
+
+    --sidebar-bg: #2d2d2d;
+    --sidebar-text: #b8b0a4;
+    --sidebar-active: #c5a547;
+    --sidebar-active-bg: rgba(197, 165, 71, 0.12);
+
+    --chart-1: #8b1a2b;
+    --chart-2: #c5a547;
+    --chart-3: #3182ce;
+    --chart-4: #2d8a4e;
+    --chart-5: #9b59b6;
+    --chart-6: #e67e22;
+
+    --shadow: rgba(0, 0, 0, 0.08);
+    --scrollbar-bg: #ede8e0;
+    --scrollbar-thumb: #d6cfc3;
+}
+
+/* ---- Theme Preview Swatches ---- */
+.arctic-preview {
+    background: linear-gradient(135deg, #0f1729, #4da6ff, #38b2ac, #e8edf5);
+}
+.forest-preview {
+    background: linear-gradient(135deg, #1a2e1a, #6abf69, #a3c585, #f0f4e8);
+}
+.copper-preview {
+    background: linear-gradient(135deg, #1f1d1b, #cd7f32, #d4a066, #f5ede4);
+}
+.ocean-preview {
+    background: linear-gradient(135deg, #0a1628, #00bfa5, #64ffda, #e6f1ff);
+}
+.paper-preview {
+    background: linear-gradient(135deg, #f7f4ef, #8b1a2b, #c5a547, #2d2d2d);
+}
