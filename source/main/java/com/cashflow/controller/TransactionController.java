@@ -1,7 +1,10 @@
 package com.cashflow.controller;
 
+import com.cashflow.model.ApplicationSettings;
+import com.cashflow.service.PenaltyService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,9 +17,11 @@ import java.util.Map;
 public class TransactionController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final PenaltyService penaltyService;
 
-    public TransactionController(JdbcTemplate jdbcTemplate) {
+    public TransactionController(JdbcTemplate jdbcTemplate, PenaltyService penaltyService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.penaltyService = penaltyService;
     }
 
     @GetMapping
@@ -79,6 +84,16 @@ public class TransactionController {
         params.add(page * size);
 
         List<Map<String, Object>> content = jdbcTemplate.queryForList(sql.toString(), params.toArray());
+        ApplicationSettings settings = penaltyService.getSettingsOrDefault();
+        LocalDate today = LocalDate.now();
+        for (Map<String, Object> row : content) {
+            PenaltyService.PenaltyDetails pd = penaltyService.calculateFromMap(row, settings, today);
+            row.put("daysLate", pd.daysLate());
+            row.put("billableDays", pd.billableDays());
+            row.put("penaltyAmount", pd.penaltyAmount());
+            row.put("totalPayable", pd.totalPayable());
+            row.put("penaltyWaived", pd.waived());
+        }
         
         List<String> categories = jdbcTemplate.queryForList("SELECT DISTINCT category FROM transaction_record WHERE category IS NOT NULL", String.class);
 
@@ -104,6 +119,14 @@ public class TransactionController {
             return Collections.emptyMap();
         }
         Map<String, Object> transaction = transactions.get(0);
+        ApplicationSettings settings = penaltyService.getSettingsOrDefault();
+        PenaltyService.PenaltyDetails pd = penaltyService.calculateFromMap(transaction, settings, LocalDate.now());
+        transaction.put("daysLate", pd.daysLate());
+        transaction.put("billableDays", pd.billableDays());
+        transaction.put("penaltyAmount", pd.penaltyAmount());
+        transaction.put("totalPayable", pd.totalPayable());
+        transaction.put("penaltyWaived", pd.waived());
+
         String transactionId = (String) transaction.get("transaction_id");
         List<Map<String, Object>> history = jdbcTemplate.queryForList("SELECT * FROM data_change WHERE transaction_id = ? ORDER BY changed_at DESC", transactionId);
 
@@ -112,5 +135,64 @@ public class TransactionController {
         response.put("history", history);
         response.put("changes", history);
         return response;
+    }
+
+    @PostMapping("/{id}/waive-penalty")
+    public Map<String, Object> waivePenalty(@PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
+        Map<String, Object> tx = findTransactionRow(id);
+        if (tx == null) {
+            return Map.of("error", "Transaction not found");
+        }
+        boolean currentlyWaived = false;
+        Object waivedObj = tx.get("penalty_waived");
+        if (waivedObj instanceof Boolean b) currentlyWaived = b;
+        else if (waivedObj instanceof Number n) currentlyWaived = n.intValue() != 0;
+        else if (waivedObj != null) currentlyWaived = "true".equalsIgnoreCase(waivedObj.toString()) || "1".equals(waivedObj.toString());
+
+        boolean newWaived = body != null && body.containsKey("waived")
+                ? Boolean.parseBoolean(String.valueOf(body.get("waived")))
+                : !currentlyWaived;
+
+        long rowId = ((Number) tx.get("id")).longValue();
+        tx.put("penalty_waived", newWaived);
+        PenaltyService.PenaltyDetails pd = penaltyService.calculateFromMap(tx, penaltyService.getSettingsOrDefault(), LocalDate.now());
+
+        jdbcTemplate.update("UPDATE transaction_record SET penalty_waived = ?, penalty_amount = ? WHERE id = ?",
+                newWaived ? 1 : 0, pd.penaltyAmount(), rowId);
+
+        return getTransaction(String.valueOf(rowId));
+    }
+
+    @PostMapping("/{id}/mark-paid")
+    public Map<String, Object> markPaid(@PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
+        Map<String, Object> tx = findTransactionRow(id);
+        if (tx == null) {
+            return Map.of("error", "Transaction not found");
+        }
+        LocalDate paymentDate = LocalDate.now();
+        if (body != null && body.get("paymentDate") != null && !body.get("paymentDate").toString().isBlank()) {
+            paymentDate = LocalDate.parse(body.get("paymentDate").toString().substring(0, 10));
+        }
+
+        long rowId = ((Number) tx.get("id")).longValue();
+        tx.put("status", "PAID");
+        tx.put("payment_date", paymentDate.toString());
+        PenaltyService.PenaltyDetails pd = penaltyService.calculateFromMap(tx, penaltyService.getSettingsOrDefault(), paymentDate);
+
+        jdbcTemplate.update("UPDATE transaction_record SET status = 'PAID', payment_date = ?, penalty_amount = ? WHERE id = ?",
+                paymentDate.toString(), pd.penaltyAmount(), rowId);
+
+        return getTransaction(String.valueOf(rowId));
+    }
+
+    private Map<String, Object> findTransactionRow(String id) {
+        List<Map<String, Object>> rows;
+        try {
+            long numericId = Long.parseLong(id);
+            rows = jdbcTemplate.queryForList("SELECT * FROM transaction_record WHERE id = ? OR transaction_id = ? ORDER BY id DESC LIMIT 1", numericId, id);
+        } catch (NumberFormatException e) {
+            rows = jdbcTemplate.queryForList("SELECT * FROM transaction_record WHERE transaction_id = ? ORDER BY id DESC LIMIT 1", id);
+        }
+        return rows.isEmpty() ? null : rows.get(0);
     }
 }

@@ -25,4 +25,6 @@ public class Transaction {
     private LocalDate dueDate;
     private LocalDate paymentDate;
     private String status;
+    private BigDecimal penaltyAmount = BigDecimal.ZERO;
+    private Boolean penaltyWaived = false;
 }

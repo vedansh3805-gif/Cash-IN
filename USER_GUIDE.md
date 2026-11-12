@@ -78,6 +78,11 @@ Located in the **Communication** page:
   - `Pending Only`: Strictly filters pending invoices that are not yet past their due date.
 - **Instant Search**: Type customer name, invoice ID (`#TXN006`), phone, or email into the search box to filter rows in real time.
 - **Aging Analysis**: Visual bar charts categorize unpaid debts by aging brackets to highlight collection priorities.
+- **Late & Unpaid Payment Penalties**:
+  - **Automatic Calculation**: Overdue unpaid invoices accrue live penalties (`Penalty` + `Total Payable`), while invoices paid after their due date retain their finalized late-payment penalty in **Transactions**.
+  - **Configurable Rules (Settings)**: Enable/disable penalties, choose the model (`Daily Percentage`, `One-Time Percentage`, `One-Time Flat Fee`, or `Daily Flat Fee`), and set the rate, grace period (days), and maximum penalty cap (%).
+  - **Waive / Mark Paid**: Use **Waive** / **Restore** on any receivable to grant or revoke a fee waiver, or click **Paid** to settle the invoice and lock in its final penalty.
+  - **Outreach Integration**: SMS and Email reminders automatically include the accrued penalty and total payable breakdown.
 
 ---
 

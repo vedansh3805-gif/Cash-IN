@@ -22,6 +22,10 @@ public class CustomerRepository {
         try { c.setEmail(rs.getString("email")); } catch (Exception ignored) {}
         c.setAveragePaymentDelay(rs.getDouble("average_payment_delay"));
         c.setTotalOutstanding(rs.getBigDecimal("total_outstanding"));
+        try {
+            java.math.BigDecimal p = rs.getBigDecimal("total_penalty");
+            c.setTotalPenalty(p != null ? p : java.math.BigDecimal.ZERO);
+        } catch (Exception ignored) { c.setTotalPenalty(java.math.BigDecimal.ZERO); }
         return c;
     };
 
@@ -30,8 +34,9 @@ public class CustomerRepository {
     }
 
     public void save(Customer c) {
-        String sql = "INSERT INTO customer (customer_id, customer_name, phone, email, average_payment_delay, total_outstanding) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, c.getCustomerId(), c.getCustomerName(), c.getPhone(), c.getEmail(), c.getAveragePaymentDelay(), c.getTotalOutstanding());
+        String sql = "INSERT INTO customer (customer_id, customer_name, phone, email, average_payment_delay, total_outstanding, total_penalty) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, c.getCustomerId(), c.getCustomerName(), c.getPhone(), c.getEmail(), c.getAveragePaymentDelay(), c.getTotalOutstanding(),
+                c.getTotalPenalty() != null ? c.getTotalPenalty() : java.math.BigDecimal.ZERO);
     }
     
     public void deleteAll() {

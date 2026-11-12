@@ -102,6 +102,16 @@ const SettingsPage = {
             const emailEl = document.getElementById('setting-email');
             if (emailEl) emailEl.value = settings.shopkeeperEmail || settings.email;
         }
+        const penEnabledEl = document.getElementById('setting-penalty-enabled');
+        if (penEnabledEl && settings.penaltyEnabled != null) penEnabledEl.checked = !!settings.penaltyEnabled;
+        const penTypeEl = document.getElementById('setting-penalty-type');
+        if (penTypeEl && settings.penaltyType) penTypeEl.value = settings.penaltyType;
+        const penRateEl = document.getElementById('setting-penalty-rate');
+        if (penRateEl && settings.penaltyRate != null) penRateEl.value = settings.penaltyRate;
+        const graceEl = document.getElementById('setting-grace-days');
+        if (graceEl && settings.gracePeriodDays != null) graceEl.value = settings.gracePeriodDays;
+        const maxPenEl = document.getElementById('setting-max-penalty');
+        if (maxPenEl && settings.maxPenaltyPercent != null) maxPenEl.value = settings.maxPenaltyPercent;
 
         // Apply theme: prefer localStorage if user previously chose one, otherwise backend setting
         const localTheme = localStorage.getItem('cashflow-theme');
@@ -120,6 +130,11 @@ const SettingsPage = {
                 forecastDays: parseInt(document.getElementById('setting-forecast-days')?.value) || 90,
                 shopkeeperPhone: document.getElementById('setting-phone')?.value.trim() || '+91 98765 00000',
                 shopkeeperEmail: document.getElementById('setting-email')?.value.trim() || 'shopkeeper@cashflow.com',
+                penaltyEnabled: document.getElementById('setting-penalty-enabled')?.checked ?? true,
+                penaltyType: document.getElementById('setting-penalty-type')?.value || 'DAILY_PERCENT',
+                penaltyRate: parseFloat(document.getElementById('setting-penalty-rate')?.value) || 0,
+                gracePeriodDays: parseInt(document.getElementById('setting-grace-days')?.value) || 0,
+                maxPenaltyPercent: parseFloat(document.getElementById('setting-max-penalty')?.value) || 0,
                 theme: currentTheme,
             };
 

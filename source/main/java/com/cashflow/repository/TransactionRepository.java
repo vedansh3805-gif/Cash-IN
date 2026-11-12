@@ -45,16 +45,25 @@ public class TransactionRepository {
         t.setDueDate(parseDate(rs.getString("due_date")));
         t.setPaymentDate(parseDate(rs.getString("payment_date")));
         t.setStatus(rs.getString("status"));
+        try {
+            java.math.BigDecimal p = rs.getBigDecimal("penalty_amount");
+            t.setPenaltyAmount(p != null ? p : java.math.BigDecimal.ZERO);
+        } catch (Exception ignored) { t.setPenaltyAmount(java.math.BigDecimal.ZERO); }
+        try {
+            t.setPenaltyWaived(rs.getObject("penalty_waived") != null && rs.getBoolean("penalty_waived"));
+        } catch (Exception ignored) { t.setPenaltyWaived(false); }
         return t;
     };
 
     public void save(Transaction t) {
-        String sql = "INSERT INTO transaction_record (transaction_id, version_id, transaction_date, transaction_type, category, description, amount, customer, customer_phone, customer_email, supplier, due_date, payment_date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, t.getTransactionId(), t.getVersionId(), t.getTransactionDate(), t.getTransactionType(), t.getCategory(), t.getDescription(), t.getAmount(), t.getCustomer(), t.getCustomerPhone(), t.getCustomerEmail(), t.getSupplier(), t.getDueDate(), t.getPaymentDate(), t.getStatus());
+        String sql = "INSERT INTO transaction_record (transaction_id, version_id, transaction_date, transaction_type, category, description, amount, customer, customer_phone, customer_email, supplier, due_date, payment_date, status, penalty_amount, penalty_waived) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, t.getTransactionId(), t.getVersionId(), t.getTransactionDate(), t.getTransactionType(), t.getCategory(), t.getDescription(), t.getAmount(), t.getCustomer(), t.getCustomerPhone(), t.getCustomerEmail(), t.getSupplier(), t.getDueDate(), t.getPaymentDate(), t.getStatus(),
+                t.getPenaltyAmount() != null ? t.getPenaltyAmount() : java.math.BigDecimal.ZERO,
+                Boolean.TRUE.equals(t.getPenaltyWaived()));
     }
 
     public void saveAll(List<Transaction> transactions) {
-        String sql = "INSERT INTO transaction_record (transaction_id, version_id, transaction_date, transaction_type, category, description, amount, customer, customer_phone, customer_email, supplier, due_date, payment_date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transaction_record (transaction_id, version_id, transaction_date, transaction_type, category, description, amount, customer, customer_phone, customer_email, supplier, due_date, payment_date, status, penalty_amount, penalty_waived) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, transactions, 100, (ps, t) -> {
             ps.setString(1, t.getTransactionId());
             ps.setString(2, t.getVersionId());
@@ -70,6 +79,8 @@ public class TransactionRepository {
             ps.setObject(12, t.getDueDate());
             ps.setObject(13, t.getPaymentDate());
             ps.setString(14, t.getStatus());
+            ps.setBigDecimal(15, t.getPenaltyAmount() != null ? t.getPenaltyAmount() : java.math.BigDecimal.ZERO);
+            ps.setBoolean(16, Boolean.TRUE.equals(t.getPenaltyWaived()));
         });
     }
 

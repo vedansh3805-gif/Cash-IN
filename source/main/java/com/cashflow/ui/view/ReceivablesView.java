@@ -116,48 +116,68 @@ public class ReceivablesView extends VBox {
         dueCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getDueDate()));
         dueCol.setPrefWidth(95);
 
-        TableColumn<Transaction, String> amtCol = new TableColumn<>("Outstanding");
+        TableColumn<Transaction, String> amtCol = new TableColumn<>("Principal");
         amtCol.setCellValueFactory(c -> new SimpleStringProperty(formatAmount(c.getValue().getAmount())));
         amtCol.setStyle("-fx-alignment: CENTER-RIGHT;");
-        amtCol.setPrefWidth(110);
+        amtCol.setPrefWidth(105);
+
+        TableColumn<Transaction, String> penCol = new TableColumn<>("Penalty");
+        penCol.setCellValueFactory(c -> {
+            Transaction t = c.getValue();
+            if (Boolean.TRUE.equals(t.getPenaltyWaived())) return new SimpleStringProperty("Waived");
+            BigDecimal pen = t.getPenaltyAmount() != null ? t.getPenaltyAmount() : BigDecimal.ZERO;
+            return new SimpleStringProperty(pen.compareTo(BigDecimal.ZERO) > 0 ? "+" + formatAmount(pen) : "₹0");
+        });
+        penCol.setStyle("-fx-alignment: CENTER-RIGHT;");
+        penCol.setPrefWidth(95);
+
+        TableColumn<Transaction, String> totalCol = new TableColumn<>("Total Due");
+        totalCol.setCellValueFactory(c -> {
+            Transaction t = c.getValue();
+            BigDecimal amt = t.getAmount() != null ? t.getAmount() : BigDecimal.ZERO;
+            BigDecimal pen = (!Boolean.TRUE.equals(t.getPenaltyWaived()) && t.getPenaltyAmount() != null) ? t.getPenaltyAmount() : BigDecimal.ZERO;
+            return new SimpleStringProperty(formatAmount(amt.add(pen)));
+        });
+        totalCol.setStyle("-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;");
+        totalCol.setPrefWidth(110);
 
         TableColumn<Transaction, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
         statusCol.setPrefWidth(85);
 
-        TableColumn<Transaction, Void> actionCol = new TableColumn<>("Actions (Buyer & Shopkeeper)");
-        actionCol.setPrefWidth(280);
+        TableColumn<Transaction, Void> actionCol = new TableColumn<>("Actions (Outreach & Penalty)");
+        actionCol.setPrefWidth(360);
         actionCol.setCellFactory(param -> new TableCell<>() {
             private final Button callBtn = new Button("📞 Call");
             private final Button smsBtn = new Button("💬 SMS");
             private final Button emailBtn = new Button("✉️ Email");
             private final Button alertBothBtn = new Button("⚡ Both");
-            private final HBox btnBox = new HBox(6, callBtn, smsBtn, emailBtn, alertBothBtn);
+            private final Button waiveBtn = new Button("Waive");
+            private final Button paidBtn = new Button("✓ Paid");
+            private final HBox btnBox = new HBox(5, callBtn, smsBtn, emailBtn, alertBothBtn, waiveBtn, paidBtn);
 
             {
-                callBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 7 3 7;");
-                smsBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 7 3 7;");
-                emailBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 7 3 7;");
-                alertBothBtn.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 3 7 3 7;");
+                callBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6;");
+                smsBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6;");
+                emailBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6;");
+                alertBothBtn.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 3 6 3 6;");
+                waiveBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6;");
+                paidBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6; -fx-background-color: #10b981; -fx-text-fill: white;");
 
-                callBtn.setOnAction(e -> {
+                callBtn.setOnAction(e -> showCallDialog(getTableView().getItems().get(getIndex())));
+                smsBtn.setOnAction(e -> showSmsDialog(getTableView().getItems().get(getIndex())));
+                emailBtn.setOnAction(e -> showEmailDialog(getTableView().getItems().get(getIndex())));
+                alertBothBtn.setOnAction(e -> notifySingleTransactionBothParties(getTableView().getItems().get(getIndex())));
+                waiveBtn.setOnAction(e -> {
                     Transaction t = getTableView().getItems().get(getIndex());
-                    showCallDialog(t);
+                    boolean nextWaive = !Boolean.TRUE.equals(t.getPenaltyWaived());
+                    uiService.waivePenalty(t.getTransactionId(), nextWaive);
+                    loadData();
                 });
-
-                smsBtn.setOnAction(e -> {
+                paidBtn.setOnAction(e -> {
                     Transaction t = getTableView().getItems().get(getIndex());
-                    showSmsDialog(t);
-                });
-
-                emailBtn.setOnAction(e -> {
-                    Transaction t = getTableView().getItems().get(getIndex());
-                    showEmailDialog(t);
-                });
-
-                alertBothBtn.setOnAction(e -> {
-                    Transaction t = getTableView().getItems().get(getIndex());
-                    notifySingleTransactionBothParties(t);
+                    uiService.markTransactionPaid(t.getTransactionId());
+                    loadData();
                 });
             }
 
@@ -168,17 +188,18 @@ public class ReceivablesView extends VBox {
                     setGraphic(null);
                 } else {
                     Transaction t = getTableView().getItems().get(getIndex());
+                    waiveBtn.setText(Boolean.TRUE.equals(t.getPenaltyWaived()) ? "Restore" : "Waive");
                     if ("OVERDUE".equalsIgnoreCase(t.getStatus())) {
-                        alertBothBtn.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 3 7 3 7; -fx-background-color: -color-danger; -fx-text-fill: white;");
+                        alertBothBtn.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 3 6 3 6; -fx-background-color: -color-danger; -fx-text-fill: white;");
                     } else {
-                        alertBothBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 7 3 7;");
+                        alertBothBtn.setStyle("-fx-font-size: 11px; -fx-padding: 3 6 3 6;");
                     }
                     setGraphic(btnBox);
                 }
             }
         });
 
-        table.getColumns().addAll(idCol, custCol, phoneCol, emailCol, dueCol, amtCol, statusCol, actionCol);
+        table.getColumns().addAll(idCol, custCol, phoneCol, emailCol, dueCol, amtCol, penCol, totalCol, statusCol, actionCol);
     }
 
     @SuppressWarnings("unchecked")
@@ -188,6 +209,7 @@ public class ReceivablesView extends VBox {
 
         BigDecimal total = (BigDecimal) data.getOrDefault("totalOutstanding", BigDecimal.ZERO);
         BigDecimal overdue = (BigDecimal) data.getOrDefault("overdueAmount", BigDecimal.ZERO);
+        BigDecimal totalPenalty = (BigDecimal) data.getOrDefault("totalPenaltyAccrued", BigDecimal.ZERO);
         List<Transaction> list = (List<Transaction>) data.getOrDefault("receivables", List.of());
 
         masterData.setAll(list);
@@ -198,6 +220,7 @@ public class ReceivablesView extends VBox {
         kpiBox.getChildren().addAll(
                 createCard("Total Receivables", formatAmount(total), false),
                 createCard("Overdue (Defaulters)", formatAmount(overdue) + " (" + overdueCount + ")", overdueCount > 0),
+                createCard("Accrued Penalties", formatAmount(totalPenalty), totalPenalty.compareTo(BigDecimal.ZERO) > 0),
                 createCard("Active Invoices", String.valueOf(list.size()), false)
         );
     }

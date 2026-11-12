@@ -1,5 +1,7 @@
 package com.cashflow.controller;
 
+import com.cashflow.model.ApplicationSettings;
+import com.cashflow.service.PenaltyService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -14,9 +16,11 @@ import java.util.Map;
 public class ReceivablesController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final PenaltyService penaltyService;
 
-    public ReceivablesController(JdbcTemplate jdbcTemplate) {
+    public ReceivablesController(JdbcTemplate jdbcTemplate, PenaltyService penaltyService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.penaltyService = penaltyService;
     }
 
     @GetMapping
@@ -29,6 +33,8 @@ public class ReceivablesController {
         
         BigDecimal totalOutstanding = BigDecimal.ZERO;
         BigDecimal overdueAmount = BigDecimal.ZERO;
+        BigDecimal totalPenaltyAccrued = BigDecimal.ZERO;
+        ApplicationSettings settings = penaltyService.getSettingsOrDefault();
         
         BigDecimal current = BigDecimal.ZERO;
         BigDecimal days30 = BigDecimal.ZERO;
@@ -81,6 +87,13 @@ public class ReceivablesController {
             } else {
                 current = current.add(amt);
             }
+
+            PenaltyService.PenaltyDetails pd = penaltyService.calculateFromMap(r, settings, refDate);
+            r.put("penaltyAmount", pd.penaltyAmount());
+            r.put("totalPayable", pd.totalPayable());
+            r.put("penaltyWaived", pd.waived());
+            r.put("billableDays", pd.billableDays());
+            totalPenaltyAccrued = totalPenaltyAccrued.add(pd.penaltyAmount());
         }
         
         Map<String, BigDecimal> aging = new HashMap<>();
@@ -91,7 +104,7 @@ public class ReceivablesController {
         aging.put("over90", over90);
         
         // Customer delays and contacts
-        List<Map<String, Object>> customerDelays = jdbcTemplate.queryForList("SELECT customer_name as customerName, phone, email, average_payment_delay as averageDelay, total_outstanding as totalOutstanding FROM customer ORDER BY average_payment_delay DESC");
+        List<Map<String, Object>> customerDelays = jdbcTemplate.queryForList("SELECT customer_name as customerName, phone, email, average_payment_delay as averageDelay, total_outstanding as totalOutstanding, COALESCE(total_penalty, 0.0) as totalPenalty FROM customer ORDER BY average_payment_delay DESC");
         
         Double avgDelayTotal = jdbcTemplate.queryForObject("SELECT AVG(average_payment_delay) FROM customer WHERE average_payment_delay > 0", Double.class);
         
@@ -99,9 +112,18 @@ public class ReceivablesController {
         response.put("receivables", receivables);
         response.put("totalOutstanding", totalOutstanding);
         response.put("overdueAmount", overdueAmount);
+        response.put("totalPenaltyAccrued", totalPenaltyAccrued);
+        response.put("totalCollectibleWithPenalty", totalOutstanding.add(totalPenaltyAccrued));
         response.put("averagePaymentDelay", avgDelayTotal != null ? avgDelayTotal : 0.0);
         response.put("aging", aging);
         response.put("customerDelays", customerDelays);
+        response.put("penaltySettings", Map.of(
+                "enabled", Boolean.TRUE.equals(settings.getPenaltyEnabled()),
+                "type", settings.getPenaltyType(),
+                "rate", settings.getPenaltyRate(),
+                "gracePeriodDays", settings.getGracePeriodDays(),
+                "maxPenaltyPercent", settings.getMaxPenaltyPercent()
+        ));
         
         return response;
     }

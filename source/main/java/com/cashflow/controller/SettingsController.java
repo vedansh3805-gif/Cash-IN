@@ -40,6 +40,14 @@ public class SettingsController {
         response.put("shopkeeperEmail", shopkeeperEmail);
         response.put("phone", shopkeeperPhone);
         response.put("email", shopkeeperEmail);
+
+        Object pe = settings.get("penalty_enabled");
+        boolean penaltyEnabled = pe == null || (pe instanceof Boolean b ? b : (pe instanceof Number n ? n.intValue() != 0 : !"false".equalsIgnoreCase(pe.toString())));
+        response.put("penaltyEnabled", penaltyEnabled);
+        response.put("penaltyType", settings.get("penalty_type") != null ? settings.get("penalty_type").toString() : "DAILY_PERCENT");
+        response.put("penaltyRate", settings.get("penalty_rate") != null ? settings.get("penalty_rate") : 0.1);
+        response.put("gracePeriodDays", settings.get("grace_period_days") != null ? settings.get("grace_period_days") : 3);
+        response.put("maxPenaltyPercent", settings.get("max_penalty_percent") != null ? settings.get("max_penalty_percent") : 25.0);
         return response;
     }
 
@@ -56,6 +64,23 @@ public class SettingsController {
         }
         if (payload.containsKey("currency")) {
             jdbcTemplate.update("UPDATE application_settings SET currency = ?", payload.get("currency"));
+        }
+        if (payload.containsKey("penaltyEnabled")) {
+            Object val = payload.get("penaltyEnabled");
+            boolean enabled = val instanceof Boolean b ? b : Boolean.parseBoolean(String.valueOf(val));
+            jdbcTemplate.update("UPDATE application_settings SET penalty_enabled = ?", enabled ? 1 : 0);
+        }
+        if (payload.containsKey("penaltyType")) {
+            jdbcTemplate.update("UPDATE application_settings SET penalty_type = ?", String.valueOf(payload.get("penaltyType")));
+        }
+        if (payload.containsKey("penaltyRate")) {
+            jdbcTemplate.update("UPDATE application_settings SET penalty_rate = ?", payload.get("penaltyRate"));
+        }
+        if (payload.containsKey("gracePeriodDays")) {
+            jdbcTemplate.update("UPDATE application_settings SET grace_period_days = ?", payload.get("gracePeriodDays"));
+        }
+        if (payload.containsKey("maxPenaltyPercent")) {
+            jdbcTemplate.update("UPDATE application_settings SET max_penalty_percent = ?", payload.get("maxPenaltyPercent"));
         }
         if (payload.containsKey("shopkeeperPhone") || payload.containsKey("phone")) {
             Object phone = payload.containsKey("shopkeeperPhone") ? payload.get("shopkeeperPhone") : payload.get("phone");

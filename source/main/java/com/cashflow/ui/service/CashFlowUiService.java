@@ -64,6 +64,12 @@ public interface CashFlowUiService {
 
     Map<String, Object> sendEmailNotice(String transactionId, String customSubject, String customBody);
 
+    default void waivePenalty(String transactionId, boolean waive) {}
+
+    default void markTransactionPaid(String transactionId) {}
+
+    default void updatePenaltySettings(boolean enabled, String type, BigDecimal rate, int graceDays, BigDecimal maxCapPercent) {}
+
     Map<String, Object> notifyBothParties(String transactionId);
 
     Map<String, Object> bulkNotifyDefaulters();

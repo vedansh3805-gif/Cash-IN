@@ -93,6 +93,10 @@ const ReceivablesPage = {
     renderSummary(data) {
         document.getElementById('recv-total').textContent = Utils.formatCurrency(data.totalOutstanding || 0);
         document.getElementById('recv-overdue').textContent = Utils.formatCurrency(data.overdueAmount || 0);
+        const penEl = document.getElementById('recv-penalty-total');
+        if (penEl) penEl.textContent = Utils.formatCurrency(data.totalPenaltyAccrued || 0);
+        const collEl = document.getElementById('recv-collectible-total');
+        if (collEl) collEl.textContent = Utils.formatCurrency(data.totalCollectibleWithPenalty != null ? data.totalCollectibleWithPenalty : (data.totalOutstanding || 0));
         const avg = data.averagePaymentDelay != null ? Math.round(Number(data.averagePaymentDelay)) : 0;
         document.getElementById('recv-avg-delay').textContent = `${avg} days`;
     },
@@ -102,7 +106,7 @@ const ReceivablesPage = {
         if (!tbody) return;
 
         if (!receivables || receivables.length === 0) {
-            tbody.innerHTML = '<tr class="empty-row"><td colspan="8"><div class="empty-state">No matching receivables found for selected filter</div></td></tr>';
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="10"><div class="empty-state">No matching receivables found for selected filter</div></td></tr>';
             return;
         }
 
@@ -111,7 +115,11 @@ const ReceivablesPage = {
             const phone = r.customerPhone || r.customer_phone || r.phone || '—';
             const email = r.customerEmail || r.customer_email || r.email || '—';
             const txnId = r.transactionId || r.transaction_id || '—';
+            const rowId = r.id || txnId;
             const amount = parseFloat(r.amount) || 0;
+            const penalty = parseFloat(r.penaltyAmount) || 0;
+            const totalPayable = r.totalPayable != null ? parseFloat(r.totalPayable) : (amount + penalty);
+            const waived = !!r.penaltyWaived;
             const dueDate = r.dueDate || r.due_date || '';
             const status = (r.status || 'PENDING').toUpperCase();
             const daysOver = r.daysOverdue != null ? Number(r.daysOverdue) : (status === 'OVERDUE' ? 14 : 0);
@@ -140,6 +148,12 @@ const ReceivablesPage = {
                         ` : '<span class="text-muted">—</span>'}
                     </td>
                     <td class="amount-col font-bold">${Utils.formatCurrency(amount)}</td>
+                    <td class="amount-col">
+                        ${waived
+                            ? '<span class="badge badge-info">Waived</span>'
+                            : (penalty > 0 ? `<span class="text-danger font-bold">+${Utils.formatCurrency(penalty)}</span>` : '<span class="text-muted">₹0</span>')}
+                    </td>
+                    <td class="amount-col font-bold">${Utils.formatCurrency(totalPayable)}</td>
                     <td>
                         <div>${Utils.formatDate(dueDate)}</div>
                         ${isOverdue ? `<small class="text-danger font-bold">${daysOver}d overdue</small>` : '<small class="text-muted">On Schedule</small>'}
@@ -159,11 +173,39 @@ const ReceivablesPage = {
                             <button class="btn btn-xs btn-primary" title="Simultaneous Dual-Party Notice" onclick="ReceivablesPage.notifyBothParties(${idx})">
                                 ${Utils.icons.sync} Both
                             </button>
+                            ${(isOverdue || penalty > 0 || waived) ? `
+                                <button class="btn btn-xs btn-secondary" title="${waived ? 'Restore Penalty' : 'Waive Penalty'}" onclick="ReceivablesPage.toggleWaivePenalty('${Utils.escapeHtml(String(rowId))}', ${!waived})">
+                                    ${waived ? 'Restore' : 'Waive'}
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-xs btn-success" title="Mark Invoice as Paid" onclick="ReceivablesPage.markPaid('${Utils.escapeHtml(String(rowId))}')">
+                                Paid
+                            </button>
                         </div>
                     </td>
                 </tr>
             `;
         }).join('');
+    },
+
+    async toggleWaivePenalty(rowId, waive) {
+        try {
+            await API.waivePenalty(rowId, waive);
+            Utils.showToast(waive ? 'Late penalty waived for invoice' : 'Late penalty restored for invoice', 'info');
+            await this.load();
+        } catch (err) {
+            Utils.showToast('Failed to update penalty waiver: ' + err.message, 'error');
+        }
+    },
+
+    async markPaid(rowId) {
+        try {
+            await API.markTransactionPaid(rowId);
+            Utils.showToast('Invoice marked as PAID and late penalty finalized', 'success');
+            await this.load();
+        } catch (err) {
+            Utils.showToast('Failed to mark paid: ' + err.message, 'error');
+        }
     },
 
     openCallModal(idx) {

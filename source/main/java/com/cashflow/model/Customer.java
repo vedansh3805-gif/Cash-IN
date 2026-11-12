@@ -15,11 +15,13 @@ public class Customer {
     private String email;
     private Double averagePaymentDelay;
     private BigDecimal totalOutstanding;
+    private BigDecimal totalPenalty = BigDecimal.ZERO;
 
     public Customer(String customerId, String customerName, Double averagePaymentDelay, BigDecimal totalOutstanding) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.averagePaymentDelay = averagePaymentDelay;
         this.totalOutstanding = totalOutstanding;
+        this.totalPenalty = BigDecimal.ZERO;
     }
 }

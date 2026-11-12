@@ -1,9 +1,11 @@
 package com.cashflow.service;
 
+import com.cashflow.model.ApplicationSettings;
 import com.cashflow.model.Customer;
 import com.cashflow.model.Transaction;
 import com.cashflow.repository.CustomerRepository;
 import com.cashflow.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,14 +21,22 @@ public class ReceivablesService {
     
     private final TransactionRepository transactionRepository;
     private final CustomerRepository customerRepository;
+    private final PenaltyService penaltyService;
 
     public ReceivablesService(TransactionRepository transactionRepository, CustomerRepository customerRepository) {
+        this(transactionRepository, customerRepository, new PenaltyService(null));
+    }
+
+    @Autowired
+    public ReceivablesService(TransactionRepository transactionRepository, CustomerRepository customerRepository, PenaltyService penaltyService) {
         this.transactionRepository = transactionRepository;
         this.customerRepository = customerRepository;
+        this.penaltyService = penaltyService;
     }
 
     public void updateCustomerMetrics(String versionId) {
         List<Transaction> transactions = transactionRepository.findAllByVersionId(versionId);
+        ApplicationSettings settings = penaltyService.getSettingsOrDefault();
         Map<String, Customer> map = new HashMap<>();
         Map<String, Long> totalDelayDays = new HashMap<>();
         Map<String, Integer> delayCounts = new HashMap<>();
@@ -49,6 +59,13 @@ public class ReceivablesService {
                 
                 if ("PENDING".equalsIgnoreCase(t.getStatus()) || "OVERDUE".equalsIgnoreCase(t.getStatus())) {
                     c.setTotalOutstanding(c.getTotalOutstanding().add(t.getAmount()));
+                }
+
+                // Calculate late/unpaid penalty for this transaction
+                PenaltyService.PenaltyDetails pd = penaltyService.calculate(t, settings, LocalDate.now());
+                if (pd.penaltyAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal existing = c.getTotalPenalty() != null ? c.getTotalPenalty() : BigDecimal.ZERO;
+                    c.setTotalPenalty(existing.add(pd.penaltyAmount()));
                 }
 
                 // Check payment delay history

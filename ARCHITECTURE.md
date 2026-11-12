@@ -39,6 +39,7 @@ CASH_IN/
 │       │       ├── CsvValidationService.java    # Data sanitization, formats & phone verification
 │       │       ├── DataComparisonService.java   # Automated version delta computation
 │       │       ├── ForecastService.java         # Monte Carlo & deterministic cash projection
+│       │       ├── PenaltyService.java          # Late & unpaid payment penalty calculation engine
 │       │       ├── ReceivablesService.java      # Aging schedule & payment delay profiling
 │       │       └── WarningService.java          # Cash breach & liquidity risk engine
 │       └── resources/

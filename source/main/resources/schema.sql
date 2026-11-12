@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS transaction_record (
     supplier TEXT,
     due_date DATE,
     payment_date DATE,
-    status TEXT
+    status TEXT,
+    penalty_amount REAL DEFAULT 0.0,
+    penalty_waived BOOLEAN DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_transaction_id ON transaction_record(transaction_id);
 CREATE INDEX IF NOT EXISTS idx_transaction_date ON transaction_record(transaction_date);
@@ -55,7 +57,8 @@ CREATE TABLE IF NOT EXISTS customer (
     phone TEXT,
     email TEXT,
     average_payment_delay REAL,
-    total_outstanding REAL
+    total_outstanding REAL,
+    total_penalty REAL DEFAULT 0.0
 );
 
 CREATE TABLE IF NOT EXISTS recurring_payment (
@@ -107,7 +110,12 @@ CREATE TABLE IF NOT EXISTS application_settings (
     minimum_cash_threshold REAL,
     currency TEXT,
     shopkeeper_phone TEXT,
-    shopkeeper_email TEXT
+    shopkeeper_email TEXT,
+    penalty_enabled BOOLEAN DEFAULT 1,
+    penalty_type TEXT DEFAULT 'DAILY_PERCENT',
+    penalty_rate REAL DEFAULT 0.1,
+    grace_period_days INTEGER DEFAULT 3,
+    max_penalty_percent REAL DEFAULT 25.0
 );
 
 CREATE TABLE IF NOT EXISTS communication_log (

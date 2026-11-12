@@ -114,6 +114,9 @@ const TransactionsPage = {
             const counterparty = t.customer || t.supplier || '—';
             const dueDate = t.dueDate || t.due_date || '';
             const status = (t.status || 'PENDING').toUpperCase();
+            const penalty = parseFloat(t.penaltyAmount) || 0;
+            const waived = !!t.penaltyWaived;
+            const daysLate = Number(t.daysLate || 0);
             const versionStr = t.versionNumber ? `V${t.versionNumber}` : (t.versionId || t.version_id ? 'V' + (t.versionId || t.version_id).substring(0, 4) : '—');
 
             return `
@@ -124,6 +127,7 @@ const TransactionsPage = {
                     <td title="${Utils.escapeHtml(description)}">${Utils.truncate(description, 35)}</td>
                     <td class="amount-col font-bold" style="color:${txnType === 'INCOME' ? 'var(--success)' : 'var(--danger)'}">
                         ${txnType === 'INCOME' ? '+' : '-'}${Utils.formatCurrency(amount)}
+                        ${penalty > 0 ? `<div class="text-danger" style="font-size:11px;">+${Utils.formatCurrency(penalty)} penalty (${daysLate}d late)</div>` : (waived ? `<div class="text-muted" style="font-size:11px;">Penalty waived</div>` : '')}
                     </td>
                     <td>${Utils.escapeHtml(counterparty)}</td>
                     <td>${Utils.formatDate(dueDate)}</td>

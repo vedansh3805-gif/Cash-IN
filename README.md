@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Spring_Boot-3.3.5-brightgreen?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
   <img src="https://img.shields.io/badge/SQLite-3.45-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
   <img src="https://img.shields.io/badge/Frontend-Vanilla_JS_%26_HTML5_Canvas-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5 Canvas" />
-  <img src="https://img.shields.io/badge/Tests-52_Passed-success?style=for-the-badge&logo=junit5&logoColor=white" alt="52 Tests" />
+  <img src="https://img.shields.io/badge/Tests-58_Passed-success?style=for-the-badge&logo=junit5&logoColor=white" alt="58 Tests" />
   <img src="https://img.shields.io/badge/Dependencies-Zero_CDN_%2F_100%25_Offline-blue?style=for-the-badge" alt="Offline Ready" />
 </p>
 
@@ -57,6 +57,7 @@ CashFlow ERP follows a high-performance, self-contained architecture with zero e
 │ • ForecastService (Runway Engine)    │ • CsvImportService (OpenCSV Parser)  │
 │ • AnomalyService (Z-Score & 3x Spike)│ • ReceivablesService (Aging Matrix)  │
 │ • ScenarioService (What-If Shocks)   │ • CommunicationService (Audit Log)   │
+│ • PenaltyService (Late/Unpaid Fees)  │                                      │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
                                        ▼
@@ -85,6 +86,7 @@ CashFlow ERP follows a high-performance, self-contained architecture with zero e
 
 ### 3. Receivables & Aging Schedule (Debtor Recovery)
 * **Aging Buckets**: Automatically segments debtors into `0–30 Days`, `31–60 Days`, `61–90 Days`, and `90+ Days (High Risk)`.
+* **Late & Unpaid Payment Penalties**: Automatically computes accrued penalties for overdue unpaid invoices and finalized penalties for late-settled invoices (`payment_date > due_date`), with configurable rules in Settings (`DAILY_PERCENT`, `PERCENTAGE`, `FLAT`, `DAILY_FLAT`, grace period, and max cap), one-click **Waive/Restore**, **Mark Paid**, and automatic inclusion in SMS/Email reminders.
 * **Debtor Delay Profiling**: Horizontal bar chart identifying historical chronic defaulters.
 * **Contact Quick-Actions**: In-app telephone triggers (`tel:`), pre-filled SMS modals, and email remittal dispatches.
 

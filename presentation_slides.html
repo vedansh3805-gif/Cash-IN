@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CashFlow ERP — Review 2 Presentation</title>
+  <style>
+    :root {
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --card-border: #334155;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --cyan: #38BDF8;
+      --green: #10B981;
+      --amber: #F59E0B;
+      --red: #EF4444;
+      --blue: #2563EB;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .btn {
+      background: var(--card-bg);
+      color: var(--cyan);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--cyan);
+      color: #0F172A;
+    }
+    .slide-counter {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .slide-deck {
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 40px 50px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+    }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+    }
+    .badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .badge.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--green);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .badge.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    h2 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+    p.lead { color: var(--cyan); font-size: 16px; margin-bottom: 15px; }
+    .grid { display: grid; gap: 15px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card h3 {
+      font-size: 14px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .card p, .card li {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card strong { color: #fff; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    th {
+      background: #1E3A8A;
+      color: #fff;
+      padding: 10px;
+      text-align: left;
+    }
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+    }
+    tr:nth-child(even) td { background: rgba(30, 41, 59, 0.6); }
+    td strong { color: #fff; }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--green);
+    }
+    ul { list-style: none; }
+    ul li { margin-bottom: 8px; }
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .controls { display: none; }
+      .slide-deck { box-shadow: none; border: none; aspect-ratio: auto; }
+      .slide { display: block !important; position: static; page-break-after: always; height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <button class="btn" onclick="prevSlide()">◀ Previous</button>
+    <span class="slide-counter" id="counter">Slide 1 / 9</span>
+    <button class="btn" onclick="nextSlide()">Next ▶</button>
+    <button class="btn" onclick="window.print()">🖨️ Print to PDF</button>
+  </div>
+
+  <div class="slide-deck">
+
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+      <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+        <span class="badge">REVIEW - 2 • MILESTONE EVALUATION</span>
+        <span class="badge success">STATUS: 85%–90% COMPLETE</span>
+      </div>
+      <div style="margin-top: 25px;">
+        <h1>CashFlow ERP (Cash-IN)</h1>
+        <p class="lead">Small Business Liquidity Management & Cash-Flow Early Warning System</p>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Predictive Runway Trajectory Modeling • Differential Dataset Versioning • Multi-Channel Debtor Outreach Hub
+        </p>
+        <div style="background: rgba(30,41,59,0.8); border: 1px solid var(--card-border); border-radius: 8px; padding: 14px; margin-bottom: 20px;">
+          <strong style="color: var(--amber);">Tech Stack:</strong>
+          <span style="color: #fff; font-size: 13px;">Java 21 | Spring Boot 3.3.5 | SQLite 3.45 (HikariCP) | HTML5 Canvas (charts.js) | JavaFX 21 Companion | Zero-CDN Offline</span>
+        </div>
+        <div class="card" style="margin-top: 15px;">
+          <h3>Project Team Members</h3>
+          <p><strong>• Member 1 (Lead Architect & Developer):</strong> Vedansh Saxena | Reg No: 21BCE1001 | GitHub: @vedansh3805-gif</p>
+          <p><strong>• Member 2:</strong> [Teammate Name] | Reg No: 21BCE1042</p>
+          <p><strong>• Member 3:</strong> [Teammate Name] | Reg No: 21BCE1089</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide">
+      <span class="badge">MILESTONE DELIVERABLES</span>
+      <h2>Project Implementation Status & Verification</h2>
+      <div class="grid grid-4" style="margin-bottom: 12px;">
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">PROGRESS</span><br><strong style="color:var(--green); font-size:16px;">85%–90% Ready</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">AUTOMATED TESTS</span><br><strong style="color:var(--cyan); font-size:16px;">52 / 52 Passed</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">REST APIS</span><br><strong style="color:var(--amber); font-size:16px;">13 Controllers, 32+ APIs</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">NETWORK</span><br><strong style="color:#fff; font-size:16px;">100% Offline Ready</strong></div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>S.No</th><th>Module / Feature</th><th>Planned & Implemented Capabilities</th><th>Status</th><th>Verification Remarks</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>01</td><td><strong>CSV Ingestion & Schema</strong></td><td>13-column schema, OpenCSV 5.9 parser, E.164 phone & email validation</td><td><span class="status-pill">100% Done</span></td><td>Verified on 3 datasets (10, 20, 35 rows)</td></tr>
+          <tr><td>02</td><td><strong>Differential Versioning</strong></td><td>Transaction-keyed delta diffs (ADDED, MODIFIED, REMOVED, UNCHANGED)</td><td><span class="status-pill">100% Done</span></td><td>DataComparisonService verified; delta chart & timeline</td></tr>
+          <tr><td>03</td><td><strong>Forecasting & Radar</strong></td><td>7/30/60/90-day cash curve, 3x anomaly detection, liquidity floor alerts</td><td><span class="status-pill">100% Done</span></td><td>Safety floor active (₹50k); recurring costs included</td></tr>
+          <tr><td>04</td><td><strong>Debtor Outreach Hub</strong></td><td>Native dialer (tel:), dual-party SMS, billing email, bulk alert dispatch</td><td><span class="status-pill">100% Done</span></td><td>Dual-party audit copy to Shopkeeper; communication_log</td></tr>
+          <tr><td>05</td><td><strong>Decoupled UI Architecture</strong></td><td>CashFlowUiService interface uniting BackendUiService & MockUiService</td><td><span class="status-pill">100% Done</span></td><td>Zero-DB standalone desktop launchable in &lt;2s</td></tr>
+          <tr><td>06</td><td><strong>REST API & Web Tier</strong></td><td>13 Spring Boot REST controllers, 32+ endpoints for all modules</td><td><span class="status-pill">90% Done</span></td><td>Sub-50ms query latency; CSV reports & filtering</td></tr>
+          <tr><td>07</td><td><strong>What-If Shock Simulator</strong></td><td>In-memory clone projections, 4 preset shock chips, multi-adjustment builder</td><td><span class="status-pill">92% Done</span></td><td>Dual-curve graph; Day-1 fallback when date omitted</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide">
+      <span class="badge">SYSTEM ARCHITECTURE</span>
+      <h2>System Design & Decoupled Architecture (ADR 1 & 2)</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>1. Dual Presentation Tier</h3>
+          <ul>
+            <li><strong>Responsive Web App:</strong> 10 modules + Component 3 login overlay.</li>
+            <li><strong>EnterpriseChart:</strong> Custom Canvas 2D engine (&lt;30KB), zero CDN, 100% offline, custom DPI scaling.</li>
+            <li><strong>JavaFX 21 Companion:</strong> Native desktop GUI with 12 distinct views and 100vh compact monitor.</li>
+            <li><strong>5 Themes:</strong> Arctic Ledger, Forest, Copper, Ocean, Paper & Ink with instant canvas redraw.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2. Decoupled Boundary (ADR 2)</h3>
+          <ul>
+            <li><strong>CashFlowUiService:</strong> Shared interface defining contracts for views.</li>
+            <li><strong>BackendUiService:</strong> Connects views to Spring Boot 3 & SQLite.</li>
+            <li><strong>MockUiService:</strong> Zero-DB in-memory mock engine; launches in &lt;2s.</li>
+            <li><strong>Zero View Coupling:</strong> Views have zero import of SQL, JDBC, or network drivers.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>3. Engines & Persistence</h3>
+          <ul>
+            <li><strong>ForecastService:</strong> Computes daily cash curve over 7/30/60/90 days against safety floor.</li>
+            <li><strong>AnomalyService:</strong> Statistical Z-Score (&gt;2.5) &amp; 3x spend spikes.</li>
+            <li><strong>CommunicationService:</strong> Dispatches Phone/SMS/Email notices with double-entry audit logging.</li>
+            <li><strong>SQLite 3.45 ACID:</strong> Embedded single-file DB (cashflow.db) via HikariCP connection pool.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide">
+      <span class="badge">FRONTEND STRUCTURE</span>
+      <h2>Frontend Hierarchy: Review-2 Rubric Triad & Operational Modules</h2>
+      <div class="grid grid-3" style="margin-bottom: 15px;">
+        <div class="card" style="border-top: 3px solid var(--cyan);">
+          <h3>Component 1: Home Page (Dashboard)</h3>
+          <p>• Header with Logo, Topbar Nav &amp; Live Status<br>• 8-card responsive KPI strip<br>• 3 Canvas charts: Dynamics, Exposure, Curve<br>• Zero-scroll auto-fit viewport</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--green);">
+          <h3>Component 2: Menu / Catalog Page</h3>
+          <p>• 10-column filterable ledger table<br>• 300ms debounced search &amp; flow filters<br>• Receivables aging schedule (0-90+ days)<br>• Direct tel: and mailto: debtor contact pills</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--amber);">
+          <h3>Component 3: Login Authentication Page</h3>
+          <p>• Clean modal overlay with input validation<br>• 1-Click evaluation quick-fills:<br>  - Admin (admin@cashflow.com)<br>  - Auditor (auditor@cashflow.com)<br>  - Shopkeeper (shopkeeper@cashflow.com)</p>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <strong style="color:#fff;">Operational Views:</strong>
+          <p style="margin-top:6px;">• <strong>Receivables &amp; Aging:</strong> Debtor delay profiling horizontal bar chart.<br>• <strong>Outreach Hub:</strong> Modals for dialer, SMS, formal email statements, and bulk broadcast.<br>• <strong>Forward Forecast:</strong> Multi-horizon projections against red dashed ₹50k safety floor.</p>
+        </div>
+        <div class="card">
+          <strong style="color:#fff;">Analytical Views:</strong>
+          <p style="margin-top:6px;">• <strong>What-If Simulator:</strong> 4 preset shock chips, multi-adjustment builder, dual-curve chart.<br>• <strong>Lineage &amp; Versions:</strong> Differential delta inspector and chronological timeline.<br>• <strong>Reports &amp; Settings:</strong> CSV statements, print media queries, 5 switchable themes.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide">
+      <span class="badge warning">CORE INNOVATION</span>
+      <h2>Specialized Capability: Multi-Channel Debtor Outreach (ADR 2, 5 & 6)</h2>
+      <div class="card" style="margin-bottom: 15px; background: rgba(30,41,59,0.9);">
+        <strong style="color:var(--amber);">Dual-Party Notification & Audit Architecture:</strong>
+        <p style="margin-top:5px; color:#fff;">Whenever a payment reminder is dispatched, CashFlow simultaneously alerts both the <strong>Debtor</strong> (urgent collection notice) and the <strong>Shopkeeper</strong> (instant verification copy). Every dispatch creates an immutable audit record in SQLite (<code>communication_log</code> table).</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>1. Native Dialer (tel:)</h3>
+          <p>• Launches OS telephone dialer directly to buyer's phone.<br>• Modal shows overdue amount, late days, contact profile.<br>• Logs call outcome notes &amp; promised payment date.</p>
+        </div>
+        <div class="card">
+          <h3>2. Dual-Party SMS</h3>
+          <p>• Generates formatted SMS with invoice ID, due date, amount, bank details.<br>• Real-time 160-char counter.<br>• Sends SMS to debtor &amp; auto-dispatches audit copy to Shopkeeper.</p>
+        </div>
+        <div class="card">
+          <h3>3. Statement Email & Bulk</h3>
+          <p>• Compiles itemized billing statement with late fees and remittance terms.<br>• CCs shopkeeper automatically.<br>• 1-Click bulk alert notifies all delinquent buyers in one click.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="slide">
+      <span class="badge success">LIVE SYSTEM DEMONSTRATION</span>
+      <h2>UI/UX Live Demo: Executive Cockpit & Predictive Runway Forecast</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Executive Cockpit (page-dashboard)</h3>
+          <ul>
+            <li><strong>Current Liquid In-Bank Cash:</strong> <span style="color:var(--green);">₹1,42,850.00</span></li>
+            <li><strong>Expected Collections:</strong> ₹5,80,000.00</li>
+            <li><strong>Scheduled Outflows:</strong> ₹4,37,150.00</li>
+            <li><strong>Net Cash Velocity:</strong> <span style="color:var(--green);">+₹1,42,850.00</span></li>
+            <li><strong>Overdue Debtor Exposure:</strong> <span style="color:var(--red);">₹75,000.00 (PQR Industries)</span></li>
+            <li><strong>Safe Operating Cash Floor:</strong> ₹50,000.00 (Configurable)</li>
+            <li><strong>Health Badge:</strong> <span class="status-pill">HEALTHY / SAFE</span></li>
+          </ul>
+          <p style="margin-top:10px; font-size:11px;">Canvas Charts: Cash Dynamics Bar, Receivables Risk Doughnut, and Liquidity Curve.</p>
+        </div>
+        <div class="card">
+          <h3>Forward Cash Forecast (page-forecast)</h3>
+          <ul>
+            <li><strong>Dynamic Horizon Switcher:</strong> Instant recalculation across 7, 30, 60, and 90-day forward windows.</li>
+            <li><strong>Dashed Safety Floor Curve:</strong> Superimposes ₹50,000 floor to visually flag shortfalls.</li>
+            <li><strong>Early Warning Radar:</strong> Predicts cash deficit date weeks in advance under delayed collection conditions.</li>
+            <li><strong>Statistical Anomaly Radar:</strong> Flags Z-Score (&gt;2.5) &amp; 3x spend spikes.</li>
+            <li><strong>Itemized Daily Breakdown:</strong> Opening, Inflow, Outflow, Closing cash per day.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 -->
+    <div class="slide">
+      <span class="badge success">LIVE SYSTEM DEMONSTRATION</span>
+      <h2>UI/UX Live Demo: Debtor Recovery Desk & What-If Stress Simulator</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Debtor Recovery Desk (page-communication)</h3>
+          <ul>
+            <li><strong>Overdue Accounts Directory:</strong> Itemizes overdue clients (ABC Ltd: ₹1.5L, PQR Industries: ₹75k, Retail Mart: ₹1.85L).</li>
+            <li><strong>Action Modals:</strong> In-app telephone dialer, dual-party SMS composer, formal statement email generator.</li>
+            <li><strong>Bulk Broadcast:</strong> 1-Click alert to all delinquent accounts with debounced dispatch.</li>
+            <li><strong>Permanent Audit Log:</strong> Immutable table recording timestamp, channel, recipient (BUYER vs SHOPKEEPER), and payload.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>What-If Stress Simulator (page-whatif)</h3>
+          <ul>
+            <li><strong>4 Preset Shock Chips:</strong><br>
+              🔴 30-Day Client Delay (Debtors push payment)<br>
+              🔴 Emergency Capex Shock (Immediate ₹1,00,000 repair)<br>
+              🔴 Market Demand Contraction (25% drop in revenue)<br>
+              🔴 Cost Inflation Surge (15% rise in supplier disbursements)</li>
+            <li><strong>Dynamic Builder:</strong> Custom multi-adjustment shocks.</li>
+            <li><strong>Day-1 Fallback:</strong> Shocks apply immediately if date is omitted.</li>
+            <li><strong>Dual-Curve Trajectory:</strong> Baseline curve vs Stressed curve with Net Impact calculation.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8 -->
+    <div class="slide">
+      <span class="badge success">QUALITY ASSURANCE</span>
+      <h2>Verification & Test Metrics: 100% Pass Audit Report</h2>
+      <div class="grid grid-4" style="margin-bottom: 12px;">
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">TOTAL TESTS</span><br><strong style="color:var(--green); font-size:18px;">52 / 52 Passed</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">VERIFICATIONS</span><br><strong style="color:var(--cyan); font-size:18px;">130+ Assertions</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">MAVEN STATUS</span><br><strong style="color:var(--amber); font-size:18px;">BUILD SUCCESS</strong></div>
+        <div class="card" style="text-align:center;"><span style="color:var(--text-muted); font-size:11px;">LATENCY</span><br><strong style="color:#fff; font-size:18px;">&lt; 50ms Queries</strong></div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Test Suites Breakdown (mvn test)</h3>
+          <ul>
+            <li><strong>ComprehensiveDryRunTest (17 Tests):</strong> Full workflow (V1/V2 import, 8 KPIs, filters, outreach, forecast, What-If, themes).</li>
+            <li><strong>PermutationCombinationTest (5 Tests):</strong> All 3 datasets, multi-shocks, blank dates, and multi-channel dispatches.</li>
+            <li><strong>BackendUiServiceTest (11 Tests):</strong> Dashboard metrics, aging schedule, overdue warnings.</li>
+            <li><strong>CommunicationServiceTest (6 Tests):</strong> Call, SMS, Email, and dual-party CC verification.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Architectural Invariants Confirmed</h3>
+          <ul>
+            <li><strong>Zero-CDN Dependency:</strong> All styles, charts, and fonts execute locally without remote fetches.</li>
+            <li><strong>Data Immutability:</strong> What-If simulations clone models in memory — zero database pollution.</li>
+            <li><strong>Safe Evolution:</strong> SQLite table creation and non-destructive migrations execute automatically.</li>
+            <li><strong>Dual-Party Compliance:</strong> Twin audit records generated for every debtor outreach event.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9 -->
+    <div class="slide">
+      <span class="badge success">CONCLUSION & ROADMAP</span>
+      <h2>Review-2 Milestone Conclusion & Future Roadmap</h2>
+      <div class="card" style="margin-bottom: 15px; border-left: 4px solid var(--green);">
+        <strong style="color:var(--green); font-size: 15px;">Milestone Status: Review-2 Objectives Vastly Exceeded (85%–90% Complete)</strong>
+        <p style="margin-top:6px; color:#fff;">All Review-2 deliverables (CSV ingestion, differential versioning, 7-90D cash forecast, dual-party outreach, and decoupled architecture) are 100% production verified. In addition, the <strong>What-If Stress Simulator</strong> with preset chips and the <strong>Component 3 Authentication overlay</strong> are already fully implemented and verified with 52 automated tests.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>1. Live Payment Gateways</h3>
+          <p>• Razorpay &amp; Stripe live webhook integration.<br>• Injects dynamic payment collection links into debtor SMS/Emails.<br>• Automated invoice settlement upon customer payment.</p>
+        </div>
+        <div class="card">
+          <h3>2. Carrier Telephony APIs</h3>
+          <p>• Twilio &amp; AWS SNS live carrier integration.<br>• Production-grade SMS and voice delivery beyond native tel: protocol.<br>• Real-time delivery receipt webhooks.</p>
+        </div>
+        <div class="card">
+          <h3>3. Open Banking Live Feeds</h3>
+          <p>• Account Aggregator / Plaid direct bank feed synchronization.<br>• Real-time bank transaction streaming, eliminating manual CSV file uploads.<br>• Continuous ADR updates in DECISIONS.md.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      counter.innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>

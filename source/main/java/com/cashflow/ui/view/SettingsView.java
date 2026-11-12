@@ -19,6 +19,11 @@ public class SettingsView extends VBox {
     private final TextField currencyField = new TextField();
     private final TextField shopkeeperPhoneField = new TextField();
     private final TextField shopkeeperEmailField = new TextField();
+    private final CheckBox penaltyEnabledBox = new CheckBox("Enable Late Payment Penalties");
+    private final ComboBox<String> penaltyTypeCombo = new ComboBox<>();
+    private final TextField penaltyRateField = new TextField();
+    private final TextField graceDaysField = new TextField();
+    private final TextField maxPenaltyField = new TextField();
     private final Label statusLabel = new Label();
 
     public SettingsView(CashFlowUiService uiService) {
@@ -71,11 +76,27 @@ public class SettingsView extends VBox {
         shopkeeperEmailField.setPromptText("shopkeeper@cashflow.com");
         grid.add(shopkeeperEmailField, 1, 5);
 
+        penaltyTypeCombo.getItems().addAll("DAILY_PERCENT", "PERCENTAGE", "FLAT", "DAILY_FLAT");
+        grid.add(new Label("Late Penalty Policy:"), 0, 6);
+        grid.add(penaltyEnabledBox, 1, 6);
+
+        grid.add(new Label("Penalty Model:"), 0, 7);
+        grid.add(penaltyTypeCombo, 1, 7);
+
+        grid.add(new Label("Penalty Rate (% or Flat):"), 0, 8);
+        grid.add(penaltyRateField, 1, 8);
+
+        grid.add(new Label("Grace Period (Days):"), 0, 9);
+        grid.add(graceDaysField, 1, 9);
+
+        grid.add(new Label("Max Penalty Cap (%):"), 0, 10);
+        grid.add(maxPenaltyField, 1, 10);
+
         Button saveBtn = new Button("Save Settings");
         saveBtn.getStyleClass().add("button-primary");
         saveBtn.setOnAction(e -> saveSettings());
 
-        grid.add(saveBtn, 1, 6);
+        grid.add(saveBtn, 1, 11);
 
         statusLabel.setStyle("-fx-text-fill: -color-accent; -fx-font-weight: bold;");
 
@@ -90,6 +111,12 @@ public class SettingsView extends VBox {
         currencyField.setText(String.valueOf(s.getOrDefault("currency", "INR")));
         shopkeeperPhoneField.setText(String.valueOf(s.getOrDefault("shopkeeperPhone", "+91 98765 00000")));
         shopkeeperEmailField.setText(String.valueOf(s.getOrDefault("shopkeeperEmail", "shopkeeper@cashflow.com")));
+        Object pe = s.getOrDefault("penaltyEnabled", true);
+        penaltyEnabledBox.setSelected(pe instanceof Boolean b ? b : Boolean.parseBoolean(String.valueOf(pe)));
+        penaltyTypeCombo.setValue(String.valueOf(s.getOrDefault("penaltyType", "DAILY_PERCENT")));
+        penaltyRateField.setText(String.valueOf(s.getOrDefault("penaltyRate", "0.1")));
+        graceDaysField.setText(String.valueOf(s.getOrDefault("gracePeriodDays", "3")));
+        maxPenaltyField.setText(String.valueOf(s.getOrDefault("maxPenaltyPercent", "25.0")));
     }
 
     private void saveSettings() {
@@ -102,8 +129,15 @@ public class SettingsView extends VBox {
             String email = shopkeeperEmailField.getText().trim();
 
             uiService.updateSettings(theme, days, threshold, currency, phone, email);
+            uiService.updatePenaltySettings(
+                    penaltyEnabledBox.isSelected(),
+                    penaltyTypeCombo.getValue() != null ? penaltyTypeCombo.getValue() : "DAILY_PERCENT",
+                    new BigDecimal(penaltyRateField.getText().trim()),
+                    Integer.parseInt(graceDaysField.getText().trim()),
+                    new BigDecimal(maxPenaltyField.getText().trim())
+            );
             ThemeManager.applyTheme(getScene(), theme);
-            statusLabel.setText("Settings saved successfully! Contact profile and theme updated.");
+            statusLabel.setText("Settings saved successfully! Contact profile, penalty rules, and theme updated.");
         } catch (Exception ex) {
             statusLabel.setText("Error saving settings: " + ex.getMessage());
         }

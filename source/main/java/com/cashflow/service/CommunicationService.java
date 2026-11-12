@@ -8,11 +8,14 @@ import com.cashflow.repository.CommunicationLogRepository;
 import com.cashflow.repository.CustomerRepository;
 import com.cashflow.repository.SettingsRepository;
 import com.cashflow.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.Desktop;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,16 +26,27 @@ public class CommunicationService {
     private final CustomerRepository customerRepository;
     private final SettingsRepository settingsRepository;
     private final CommunicationLogRepository logRepository;
+    private final PenaltyService penaltyService;
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
 
     public CommunicationService(TransactionRepository transactionRepository,
                                 CustomerRepository customerRepository,
                                 SettingsRepository settingsRepository,
                                 CommunicationLogRepository logRepository) {
+        this(transactionRepository, customerRepository, settingsRepository, logRepository, new PenaltyService(settingsRepository));
+    }
+
+    @Autowired
+    public CommunicationService(TransactionRepository transactionRepository,
+                                CustomerRepository customerRepository,
+                                SettingsRepository settingsRepository,
+                                CommunicationLogRepository logRepository,
+                                PenaltyService penaltyService) {
         this.transactionRepository = transactionRepository;
         this.customerRepository = customerRepository;
         this.settingsRepository = settingsRepository;
         this.logRepository = logRepository;
+        this.penaltyService = penaltyService;
     }
 
     private Transaction findTransactionOrThrow(String transactionId) {
@@ -156,12 +170,16 @@ public class CommunicationService {
         String formattedAmt = currencyFormatter.format(t.getAmount());
 
         LocalDateTime now = LocalDateTime.now();
+        PenaltyService.PenaltyDetails pd = penaltyService.calculate(t, settings, LocalDate.now());
+        String penaltySnippet = pd.penaltyAmount().compareTo(BigDecimal.ZERO) > 0
+                ? String.format(" + Late Penalty (%d days): %s (Total Due: %s)", pd.daysLate(), currencyFormatter.format(pd.penaltyAmount()), currencyFormatter.format(pd.totalPayable()))
+                : "";
 
         // Construct Buyer SMS
         String buyerSms = (customMessage != null && !customMessage.isBlank())
                 ? customMessage
-                : String.format("CASH-IN ALERT: Dear %s, payment of %s for Invoice #%s is %s (Due: %s). Please remit payment immediately to clear your account. - CashFlow Store (%s)",
-                customerName, formattedAmt, t.getTransactionId(), t.getStatus(), t.getDueDate(), settings.getShopkeeperPhone());
+                : String.format("CASH-IN ALERT: Dear %s, payment of %s%s for Invoice #%s is %s (Due: %s). Please remit payment immediately to clear your account. - CashFlow Store (%s)",
+                customerName, formattedAmt, penaltySnippet, t.getTransactionId(), t.getStatus(), t.getDueDate(), settings.getShopkeeperPhone());
 
         // Construct Shopkeeper Audit SMS
         String shopkeeperSms = String.format("SHOPKEEPER AUDIT: Overdue reminder SMS dispatched to buyer %s (%s) for Invoice #%s (%s, Status: %s) on %s.",
@@ -220,10 +238,16 @@ public class CommunicationService {
         String formattedAmt = currencyFormatter.format(t.getAmount());
 
         LocalDateTime now = LocalDateTime.now();
+        PenaltyService.PenaltyDetails pd = penaltyService.calculate(t, settings, LocalDate.now());
+        String penaltyLines = pd.penaltyAmount().compareTo(BigDecimal.ZERO) > 0
+                ? String.format("• Late Penalty (%d days overdue): %s\n• Total Payable (incl. Penalty): %s\n",
+                pd.daysLate(), currencyFormatter.format(pd.penaltyAmount()), currencyFormatter.format(pd.totalPayable()))
+                : "";
 
         String buyerSubject = (customSubject != null && !customSubject.isBlank())
                 ? customSubject
-                : String.format("URGENT NOTICE: Outstanding Payment for Invoice #%s (%s)", t.getTransactionId(), formattedAmt);
+                : String.format("URGENT NOTICE: Outstanding Payment for Invoice #%s (%s)", t.getTransactionId(),
+                pd.penaltyAmount().compareTo(BigDecimal.ZERO) > 0 ? currencyFormatter.format(pd.totalPayable()) : formattedAmt);
 
         String buyerBody = (customBody != null && !customBody.isBlank())
                 ? customBody
@@ -231,7 +255,8 @@ public class CommunicationService {
                 "Dear %s,\n\n" +
                         "This is a formal payment notice regarding your outstanding balance with us.\n\n" +
                         "• Invoice Number: %s\n" +
-                        "• Outstanding Amount: %s\n" +
+                        "• Principal Amount: %s\n" +
+                        "%s" +
                         "• Due Date: %s\n" +
                         "• Current Status: %s\n\n" +
                         "Please arrange for the prompt settlement of this invoice to maintain active service and trade credit.\n" +
@@ -239,7 +264,7 @@ public class CommunicationService {
                         "Sincerely,\n" +
                         "Accounts Department\n" +
                         "Phone: %s | Email: %s",
-                customerName, t.getTransactionId(), formattedAmt, t.getDueDate(), t.getStatus(),
+                customerName, t.getTransactionId(), formattedAmt, penaltyLines, t.getDueDate(), t.getStatus(),
                 settings.getShopkeeperPhone(), settings.getShopkeeperEmail()
         );
 

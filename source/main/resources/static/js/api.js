@@ -90,6 +90,12 @@ const API = {
         return this.get(`/transactions${query ? '?' + query : ''}`);
     },
     getTransactionDetail(id) { return this.get(`/transactions/${id}`); },
+    waivePenalty(id, waived = null) {
+        return this.post(`/transactions/${encodeURIComponent(id)}/waive-penalty`, waived === null ? {} : { waived });
+    },
+    markTransactionPaid(id, paymentDate = null) {
+        return this.post(`/transactions/${encodeURIComponent(id)}/mark-paid`, paymentDate ? { paymentDate } : {});
+    },
 
     // ---- Forecast ----
     getForecast(days = 30, versionId = '') {

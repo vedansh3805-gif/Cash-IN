@@ -36,6 +36,7 @@ public class BackendUiService implements CashFlowUiService {
     private final SettingsRepository settingsRepository;
     private final CsvImportService csvImportService;
     private final CommunicationService communicationService;
+    private final PenaltyService penaltyService;
     private final JdbcTemplate jdbcTemplate;
 
     public BackendUiService(CashFlowService cashFlowService,
@@ -48,6 +49,7 @@ public class BackendUiService implements CashFlowUiService {
                             SettingsRepository settingsRepository,
                             CsvImportService csvImportService,
                             CommunicationService communicationService,
+                            PenaltyService penaltyService,
                             JdbcTemplate jdbcTemplate) {
         this.cashFlowService = cashFlowService;
         this.transactionRepository = transactionRepository;
@@ -59,6 +61,7 @@ public class BackendUiService implements CashFlowUiService {
         this.settingsRepository = settingsRepository;
         this.csvImportService = csvImportService;
         this.communicationService = communicationService;
+        this.penaltyService = penaltyService;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -164,8 +167,13 @@ public class BackendUiService implements CashFlowUiService {
         BigDecimal days90 = BigDecimal.ZERO;
         BigDecimal over90 = BigDecimal.ZERO;
 
+        ApplicationSettings penSettings = penaltyService.getSettingsOrDefault();
+        BigDecimal totalPenaltyAccrued = BigDecimal.ZERO;
         for (Transaction r : receivables) {
             BigDecimal amt = r.getAmount();
+            PenaltyService.PenaltyDetails pd = penaltyService.calculate(r, penSettings, today);
+            r.setPenaltyAmount(pd.penaltyAmount());
+            totalPenaltyAccrued = totalPenaltyAccrued.add(pd.penaltyAmount());
             if (r.getDueDate() != null) {
                 long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(r.getDueDate(), today);
                 if (daysOverdue <= 0) current = current.add(amt);
@@ -191,6 +199,8 @@ public class BackendUiService implements CashFlowUiService {
 
         res.put("totalOutstanding", total);
         res.put("overdueAmount", overdue);
+        res.put("totalPenaltyAccrued", totalPenaltyAccrued);
+        res.put("totalCollectibleWithPenalty", total.add(totalPenaltyAccrued));
         res.put("averagePaymentDelay", avgDelay != null ? avgDelay : 0.0);
         res.put("aging", aging);
         res.put("receivables", receivables);
@@ -450,6 +460,11 @@ public class BackendUiService implements CashFlowUiService {
             m.put("currency", s.getCurrency());
             m.put("shopkeeperPhone", s.getShopkeeperPhone());
             m.put("shopkeeperEmail", s.getShopkeeperEmail());
+            m.put("penaltyEnabled", s.getPenaltyEnabled() != null ? s.getPenaltyEnabled() : true);
+            m.put("penaltyType", s.getPenaltyType() != null ? s.getPenaltyType() : "DAILY_PERCENT");
+            m.put("penaltyRate", s.getPenaltyRate() != null ? s.getPenaltyRate() : new BigDecimal("0.1"));
+            m.put("gracePeriodDays", s.getGracePeriodDays() != null ? s.getGracePeriodDays() : 3);
+            m.put("maxPenaltyPercent", s.getMaxPenaltyPercent() != null ? s.getMaxPenaltyPercent() : new BigDecimal("25.0"));
             return m;
         }
         Map<String, Object> m = new HashMap<>();
@@ -459,6 +474,11 @@ public class BackendUiService implements CashFlowUiService {
         m.put("currency", "INR");
         m.put("shopkeeperPhone", "+91 98765 00000");
         m.put("shopkeeperEmail", "shopkeeper@cashflow.com");
+        m.put("penaltyEnabled", true);
+        m.put("penaltyType", "DAILY_PERCENT");
+        m.put("penaltyRate", new BigDecimal("0.1"));
+        m.put("gracePeriodDays", 3);
+        m.put("maxPenaltyPercent", new BigDecimal("25.0"));
         return m;
     }
 
@@ -469,7 +489,48 @@ public class BackendUiService implements CashFlowUiService {
 
     @Override
     public void updateSettings(String theme, int forecastDays, BigDecimal minimumThreshold, String currency, String shopkeeperPhone, String shopkeeperEmail) {
+        ApplicationSettings existing = settingsRepository.getSettings();
         ApplicationSettings s = new ApplicationSettings("DEFAULT", theme, forecastDays, minimumThreshold, currency, shopkeeperPhone, shopkeeperEmail);
+        if (existing != null) {
+            s.setPenaltyEnabled(existing.getPenaltyEnabled());
+            s.setPenaltyType(existing.getPenaltyType());
+            s.setPenaltyRate(existing.getPenaltyRate());
+            s.setGracePeriodDays(existing.getGracePeriodDays());
+            s.setMaxPenaltyPercent(existing.getMaxPenaltyPercent());
+        }
+        settingsRepository.update(s);
+    }
+
+    @Override
+    public void waivePenalty(String transactionId, boolean waive) {
+        transactionRepository.findByTransactionId(transactionId).ifPresent(t -> {
+            t.setPenaltyWaived(waive);
+            PenaltyService.PenaltyDetails pd = penaltyService.calculate(t, penaltyService.getSettingsOrDefault(), LocalDate.now());
+            jdbcTemplate.update("UPDATE transaction_record SET penalty_waived = ?, penalty_amount = ? WHERE id = ?",
+                    waive ? 1 : 0, pd.penaltyAmount(), t.getId());
+        });
+    }
+
+    @Override
+    public void markTransactionPaid(String transactionId) {
+        transactionRepository.findByTransactionId(transactionId).ifPresent(t -> {
+            LocalDate today = LocalDate.now();
+            t.setStatus("PAID");
+            t.setPaymentDate(today);
+            PenaltyService.PenaltyDetails pd = penaltyService.calculate(t, penaltyService.getSettingsOrDefault(), today);
+            jdbcTemplate.update("UPDATE transaction_record SET status = 'PAID', payment_date = ?, penalty_amount = ? WHERE id = ?",
+                    today.toString(), pd.penaltyAmount(), t.getId());
+        });
+    }
+
+    @Override
+    public void updatePenaltySettings(boolean enabled, String type, BigDecimal rate, int graceDays, BigDecimal maxCapPercent) {
+        ApplicationSettings s = penaltyService.getSettingsOrDefault();
+        s.setPenaltyEnabled(enabled);
+        s.setPenaltyType(type);
+        s.setPenaltyRate(rate);
+        s.setGracePeriodDays(graceDays);
+        s.setMaxPenaltyPercent(maxCapPercent);
         settingsRepository.update(s);
     }
 
